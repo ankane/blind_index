@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Andrew Kane"]
   spec.email         = ["andrew@chartkick.com"]
 
-  spec.summary       = "Securely query encrypted database fields"
+  spec.summary       = "Securely search encrypted database fields"
   spec.homepage      = "https://github.com/ankane/blind_index"
   spec.license       = "MIT"
 

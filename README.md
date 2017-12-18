@@ -1,6 +1,6 @@
 # Blind Index
 
-Securely query encrypted database fields
+Securely search encrypted database fields
 
 Designed for use with [attr_encrypted](https://github.com/attr-encrypted/attr_encrypted)
 
