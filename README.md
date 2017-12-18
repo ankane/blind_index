@@ -4,6 +4,8 @@ Securely query encrypted database fields
 
 Designed for use with [attr_encrypted](https://github.com/attr-encrypted/attr_encrypted)
 
+[![Build Status](https://travis-ci.org/ankane/blind_index.svg?branch=master)](https://travis-ci.org/ankane/blind_index)
+
 ## How It Works
 
 We use [this approach](https://www.sitepoint.com/how-to-search-on-securely-encrypted-database-fields/) described by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function (PBKDF2-HMAC-SHA256) to the value we’re searching and then perform a database search. This results in performant queries for equality operations, while keeping the data secure from those without the key.
