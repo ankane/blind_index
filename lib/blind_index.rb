@@ -7,7 +7,7 @@ require "blind_index/model"
 require "blind_index/version"
 
 module BlindIndex
-  class Error; end
+  class Error < StandardError; end
 
   def self.generate_bidx(value, key:, iterations:, expression: nil, **options)
     raise BlindIndex::Error, "Missing key for blind index" unless key
