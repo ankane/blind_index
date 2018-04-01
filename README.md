@@ -112,6 +112,18 @@ end
 
 The default is `10000`. Changing this value requires you to recompute the blind index.
 
+## Index Only
+
+If you don’t need to store the original value (for instance, when just checking duplicates), use a virtual attribute:
+
+```ruby
+class User < ApplicationRecord
+  attribute :email
+
+  blind_index :email, ...
+end
+```
+
 ## History
 
 View the [changelog](https://github.com/ankane/blind_index/blob/master/CHANGELOG.md)
