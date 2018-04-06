@@ -1,6 +1,6 @@
 module BlindIndex
   module Model
-    def blind_index(name, key: nil, iterations: nil, attribute: nil, expression: nil, bidx_attribute: nil)
+    def blind_index(name, key: nil, iterations: nil, attribute: nil, expression: nil, bidx_attribute: nil, callback: true)
       iterations ||= 10000
       attribute ||= name
       bidx_attribute ||= :"encrypted_#{name}_bidx"
@@ -26,9 +26,12 @@ module BlindIndex
           bidx_attribute: bidx_attribute
         }
 
-        before_validation method_name, if: -> { changes.key?(attribute.to_s) }
         define_method method_name do
           self.send("#{bidx_attribute}=", BlindIndex.generate_bidx(send(attribute), self.class.blind_indexes[name]))
+        end
+
+        if callback
+          before_validation method_name, if: -> { changes.key?(attribute.to_s) }
         end
       end
     end
