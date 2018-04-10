@@ -72,7 +72,7 @@ You can apply expressions to attributes before indexing and searching. This give
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, expression: -> (v) { v.downcase } ...
+  blind_index :email, expression: ->(v) { v.downcase } ...
 end
 ```
 
@@ -90,7 +90,7 @@ And update your model
 ```ruby
 class User < ApplicationRecord
   blind_index :email, ...
-  blind_index :email_ci, attribute: :email, expression: -> (v) { v.downcase } ...
+  blind_index :email_ci, attribute: :email, expression: ->(v) { v.downcase } ...
 end
 ```
 
