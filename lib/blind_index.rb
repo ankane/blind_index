@@ -2,7 +2,6 @@
 require "active_support"
 
 # modules
-require "blind_index/extensions"
 require "blind_index/model"
 require "blind_index/version"
 
@@ -27,9 +26,11 @@ module BlindIndex
 end
 
 ActiveSupport.on_load(:active_record) do
+  require "blind_index/extensions"
   extend BlindIndex::Model
   ActiveRecord::TableMetadata.prepend(BlindIndex::Extensions::TableMetadata)
-  if ActiveRecord::VERSION::STRING.start_with?("5.0.")
+
+  unless ActiveRecord::VERSION::STRING.start_with?("5.1.")
     ActiveRecord::Validations::UniquenessValidator.prepend(BlindIndex::Extensions::UniquenessValidator)
   end
 end

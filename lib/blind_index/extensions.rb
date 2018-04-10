@@ -23,12 +23,22 @@ module BlindIndex
     end
 
     module UniquenessValidator
-      def build_relation(klass, table, attribute, value)
-        if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
-          value = BlindIndex.generate_bidx(value, bi)
-          attribute = bi[:bidx_attribute]
+      if ActiveRecord::VERSION::STRING >= "5.2"
+        def build_relation(klass, attribute, value)
+          if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
+            value = BlindIndex.generate_bidx(value, bi)
+            attribute = bi[:bidx_attribute]
+          end
+          super(klass, attribute, value)
         end
-        super(klass, table, attribute, value)
+      else
+        def build_relation(klass, table, attribute, value)
+          if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
+            value = BlindIndex.generate_bidx(value, bi)
+            attribute = bi[:bidx_attribute]
+          end
+          super(klass, table, attribute, value)
+        end
       end
     end
   end

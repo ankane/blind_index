@@ -2,6 +2,7 @@ language: ruby
 rvm: 2.4.2
 gemfile:
   - Gemfile
+  - test/gemfiles/activerecord51.gemfile
   - test/gemfiles/activerecord50.gemfile
 sudo: false
 before_install: gem install bundler
