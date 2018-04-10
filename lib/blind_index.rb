@@ -10,6 +10,8 @@ module BlindIndex
   class Error < StandardError; end
 
   def self.generate_bidx(value, key:, iterations:, expression: nil, **options)
+    key = key.call if key.respond_to?(:call)
+
     raise BlindIndex::Error, "Missing key for blind index" unless key
 
     # apply expression
