@@ -53,6 +53,14 @@ class BlindIndexTest < Minitest::Test
     user = create_user(email: nil)
     assert_nil user.encrypted_email_bidx
     assert User.where(email: nil).first
+    assert_nil User.where(email: "").first
+  end
+
+  def test_empty_string
+    user = create_user(email: "")
+    assert user.encrypted_email_bidx
+    assert User.where(email: "").first
+    assert_nil User.where(email: nil).first
   end
 
   def test_unset
