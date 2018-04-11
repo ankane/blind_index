@@ -1,3 +1,7 @@
+## 0.2.0 [unreleased]
+
+- Fixed `nil` handling
+
 ## 0.1.1
 
 - Added support for ActiveRecord 5.2

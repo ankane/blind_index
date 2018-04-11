@@ -49,6 +49,20 @@ class BlindIndexTest < Minitest::Test
     assert_includes user.errors.full_messages.first, "has already been taken"
   end
 
+  def test_nil
+    user = create_user(email: nil)
+    assert_nil user.encrypted_email_bidx
+    assert User.where(email: nil).first
+  end
+
+  def test_unset
+    user = create_user
+    user.email = nil
+    user.save!
+    assert_nil user.encrypted_email_bidx
+    assert User.where(email: nil).first
+  end
+
   private
 
   def create_user(email: "test@example.org")

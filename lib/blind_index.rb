@@ -16,12 +16,14 @@ module BlindIndex
     # apply expression
     value = expression.call(value) if expression
 
-    # generate hash
-    digest = OpenSSL::Digest::SHA256.new
-    value = OpenSSL::PKCS5.pbkdf2_hmac(value.to_s, key, iterations, digest.digest_length, digest)
+    unless value.nil?
+      # generate hash
+      digest = OpenSSL::Digest::SHA256.new
+      value = OpenSSL::PKCS5.pbkdf2_hmac(value.to_s, key, iterations, digest.digest_length, digest)
 
-    # encode
-    [value].pack("m")
+      # encode
+      [value].pack("m")
+    end
   end
 end
 
