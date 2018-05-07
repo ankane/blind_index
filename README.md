@@ -81,7 +81,7 @@ end
 You may want multiple blind indexes for an attribute. To do this, add another column:
 
 ```ruby
-add_column :users, :encrypted_email_ci_bidx, :text
+add_column :users, :encrypted_email_ci_bidx, :string
 add_index :users, :encrypted_email_ci_bidx
 ```
 
