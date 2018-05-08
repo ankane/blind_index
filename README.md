@@ -31,21 +31,20 @@ add_column :users, :encrypted_email_bidx, :string
 add_index :users, :encrypted_email_bidx
 ```
 
-Generate one key for encryption and one key for hashing and set them in your environment ([dotenv](https://github.com/bkeepers/dotenv) is great for this). For development, you can use these:
-
-```sh
-EMAIL_ENCRYPTION_KEY=00000000000000000000000000000000
-EMAIL_BLIND_INDEX_KEY=99999999999999999999999999999999
-```
-
 And add to your model
 
 ```ruby
 class User < ApplicationRecord
   attr_encrypted :email, key: ENV["EMAIL_ENCRYPTION_KEY"]
-
   blind_index :email, key: ENV["EMAIL_BLIND_INDEX_KEY"]
 end
+```
+
+We use environment variables to store the keys ([dotenv](https://github.com/bkeepers/dotenv) is great for this). *Do not commit them to source control.* Generate one key for encryption and one key for hashing. For development, you can use these:
+
+```sh
+EMAIL_ENCRYPTION_KEY=00000000000000000000000000000000
+EMAIL_BLIND_INDEX_KEY=99999999999999999999999999999999
 ```
 
 And query away
@@ -119,7 +118,6 @@ If you don’t need to store the original value (for instance, when just checkin
 ```ruby
 class User < ApplicationRecord
   attribute :email
-
   blind_index :email, ...
 end
 ```
