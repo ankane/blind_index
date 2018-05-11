@@ -1,16 +1,30 @@
 module BlindIndex
   module Extensions
     module TableMetadata
-      def resolve_column_aliases(hash)
-        new_hash = super
-        if has_blind_indexes?
-          hash.each do |key, _|
-            if (bi = klass.blind_indexes[key])
-              new_hash[bi[:bidx_attribute]] = BlindIndex.generate_bidx(new_hash.delete(key), bi)
+      if ActiveRecord::VERSION::MAJOR >= 5
+        def resolve_column_aliases(hash)
+          new_hash = super
+          if has_blind_indexes?
+            hash.each do |key, _|
+              if (bi = klass.blind_indexes[key])
+                new_hash[bi[:bidx_attribute]] = BlindIndex.generate_bidx(new_hash.delete(key), bi)
+              end
             end
           end
+          new_hash
         end
-        new_hash
+      else
+        def resolve_column_aliases(klass, hash)
+          new_hash = super
+          if klass.respond_to?(:blind_indexes)
+            hash.each do |key, _|
+              if (bi = klass.blind_indexes[key])
+                new_hash[bi[:bidx_attribute]] = BlindIndex.generate_bidx(new_hash.delete(key), bi)
+              end
+            end
+          end
+          new_hash
+        end
       end
 
       # memoize for performance

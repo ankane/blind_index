@@ -34,7 +34,7 @@ ActiveSupport.on_load(:active_record) do
   if defined?(ActiveRecord::TableMetadata)
     ActiveRecord::TableMetadata.prepend(BlindIndex::Extensions::TableMetadata)
   else
-    ActiveRecord::PredicateBuilder.singleton_method.prepend(BlindIndex::Extensions::TableMetadata)
+    ActiveRecord::PredicateBuilder.singleton_class.prepend(BlindIndex::Extensions::TableMetadata)
   end
 
   unless ActiveRecord::VERSION::STRING.start_with?("5.1.")
