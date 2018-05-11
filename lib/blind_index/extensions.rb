@@ -13,10 +13,18 @@ module BlindIndex
           end
           new_hash
         end
+
+        # memoize for performance
+        def has_blind_indexes?
+          unless defined?(@has_blind_indexes)
+            @has_blind_indexes = klass.respond_to?(:blind_indexes)
+          end
+          @has_blind_indexes
+        end
       else
         def resolve_column_aliases(klass, hash)
           new_hash = super
-          if klass.respond_to?(:blind_indexes)
+          if has_blind_indexes?(klass)
             hash.each do |key, _|
               if (bi = klass.blind_indexes[key])
                 new_hash[bi[:bidx_attribute]] = BlindIndex.generate_bidx(new_hash.delete(key), bi)
@@ -25,14 +33,16 @@ module BlindIndex
           end
           new_hash
         end
-      end
 
-      # memoize for performance
-      def has_blind_indexes?
-        unless defined?(@has_blind_indexes)
-          @has_blind_indexes = klass.respond_to?(:blind_indexes)
+        @@blind_index_cache = {}
+
+        # memoize for performance
+        def has_blind_indexes?(klass)
+          if @@blind_index_cache[klass].nil?
+            @@blind_index_cache[klass] = klass.respond_to?(:blind_indexes)
+          end
+          @@blind_index_cache[klass]
         end
-        @has_blind_indexes
       end
     end
 
