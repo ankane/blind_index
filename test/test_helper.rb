@@ -29,4 +29,9 @@ class User < ActiveRecord::Base
 
   validates :email, uniqueness: true
   validates :email_ci, uniqueness: true
+
+  # ensure custom method still works
+  def read_attribute_for_validation(key)
+    super
+  end
 end

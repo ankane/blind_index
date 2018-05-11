@@ -13,7 +13,7 @@ module BlindIndex
         class << self
           def blind_indexes
             @blind_indexes ||= {}
-          end unless respond_to?(:blind_indexes)
+          end unless method_defined?(:blind_indexes)
         end
 
         raise BlindIndex::Error, "Duplicate blind index: #{name}" if blind_indexes[name]
@@ -34,13 +34,18 @@ module BlindIndex
           before_validation method_name, if: -> { changes.key?(attribute.to_s) }
         end
 
-        def read_attribute_for_validation(key)
-          if (bi = self.class.blind_indexes[key])
-            send(bi[:attribute])
-          else
-            super
-          end
-        end unless respond_to?(:read_attribute_for_validation)
+        # use include so user can override
+        include InstanceMethods if blind_indexes.size == 1
+      end
+    end
+  end
+
+  module InstanceMethods
+    def read_attribute_for_validation(key)
+      if (bi = self.class.blind_indexes[key])
+        send(bi[:attribute])
+      else
+        super
       end
     end
   end
