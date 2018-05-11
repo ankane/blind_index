@@ -1,7 +1,8 @@
 ## 0.2.0 [unreleased]
 
-- Fixed `nil` handling
+- Added support for ActiveRecord 4.2
 - Improved validation support when multiple blind indexes
+- Fixed `nil` handling
 
 ## 0.1.1
 
