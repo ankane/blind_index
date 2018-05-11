@@ -1,4 +1,4 @@
-## 0.2.0 [unreleased]
+## 0.2.0
 
 - Added support for ActiveRecord 4.2
 - Improved validation support when multiple blind indexes
