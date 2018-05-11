@@ -33,6 +33,14 @@ module BlindIndex
         if callback
           before_validation method_name, if: -> { changes.key?(attribute.to_s) }
         end
+
+        def read_attribute_for_validation(key)
+          if (bi = self.class.blind_indexes[key])
+            send(bi[:attribute])
+          else
+            super
+          end
+        end unless respond_to?(:read_attribute_for_validation)
       end
     end
   end

@@ -1,6 +1,7 @@
 ## 0.2.0 [unreleased]
 
 - Fixed `nil` handling
+- Improved validation support when multiple blind indexes
 
 ## 0.1.1
 

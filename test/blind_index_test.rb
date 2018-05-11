@@ -46,7 +46,7 @@ class BlindIndexTest < Minitest::Test
     create_user
     user = User.new(email: "TEST@example.org")
     assert !user.valid?
-    assert_includes user.errors.full_messages.first, "has already been taken"
+    assert_equal "Email ci has already been taken", user.errors.full_messages.first
   end
 
   def test_nil

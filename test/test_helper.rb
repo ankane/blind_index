@@ -28,6 +28,5 @@ class User < ActiveRecord::Base
   blind_index :email_ci, key: -> { "2"*32 }, attribute: :email, expression: ->(v) { v.try(:downcase) }
 
   validates :email, uniqueness: true
-  # not ideal
-  validates :encrypted_email_ci_bidx, uniqueness: true
+  validates :email_ci, uniqueness: true
 end
