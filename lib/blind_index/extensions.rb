@@ -6,7 +6,7 @@ module BlindIndex
         new_hash = super
         if has_blind_indexes?
           hash.each do |key, _|
-            if (bi = klass.blind_indexes[key])
+            if (bi = klass.blind_indexes[key]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
               new_hash[bi[:bidx_attribute]] = BlindIndex.generate_bidx(new_hash.delete(key), bi)
             end
           end
