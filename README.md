@@ -122,6 +122,15 @@ class User < ApplicationRecord
 end
 ```
 
+## Fixtures
+
+You can use blind indexes in fixtures with:
+
+```yml
+test_user:
+  encrypted_email_bidx: <%= BlindIndex.generate_bidx("test@example.org", User.blind_indexes[:email]).inspect %>
+```
+
 ## History
 
 View the [changelog](https://github.com/ankane/blind_index/blob/master/CHANGELOG.md)
