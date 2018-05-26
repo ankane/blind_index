@@ -12,6 +12,9 @@ module BlindIndex
     key = key.call if key.respond_to?(:call)
 
     raise BlindIndex::Error, "Missing key for blind index" unless key
+    # key = key.to_str
+    # raise BlindIndex::Error, "Key must be 32 bytes" if key.bytesize != 32
+    # raise BlindIndex::Error, "Key must use BINARY encoding" if key.encoding != Encoding::BINARY
 
     # apply expression
     value = expression.call(value) if expression
