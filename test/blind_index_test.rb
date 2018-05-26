@@ -71,6 +71,11 @@ class BlindIndexTest < Minitest::Test
     assert User.where(email: nil).first
   end
 
+  def test_class_method
+    user = create_user
+    assert_equal user.encrypted_email_bidx, User.compute_email_bidx("test@example.org")
+  end
+
   private
 
   def create_user(email: "test@example.org")

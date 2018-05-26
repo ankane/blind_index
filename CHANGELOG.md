@@ -1,5 +1,6 @@
 ## 0.2.1 [unreleased]
 
+- Added class method to compute blind index
 - Fixed issue with cached statements
 
 ## 0.2.0

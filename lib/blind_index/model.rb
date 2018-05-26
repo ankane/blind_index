@@ -26,8 +26,12 @@ module BlindIndex
           bidx_attribute: bidx_attribute
         }
 
+        define_singleton_method method_name do |value|
+          BlindIndex.generate_bidx(value, blind_indexes[name])
+        end
+
         define_method method_name do
-          self.send("#{bidx_attribute}=", BlindIndex.generate_bidx(send(attribute), self.class.blind_indexes[name]))
+          self.send("#{bidx_attribute}=", self.class.send(method_name, send(attribute)))
         end
 
         if callback
