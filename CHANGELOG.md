@@ -1,4 +1,4 @@
-## 0.2.1 [unreleased]
+## 0.2.1
 
 - Added class method to compute blind index
 - Fixed issue with cached statements

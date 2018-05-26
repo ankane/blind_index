@@ -128,7 +128,7 @@ You can use blind indexes in fixtures with:
 
 ```yml
 test_user:
-  encrypted_email_bidx: <%= BlindIndex.generate_bidx("test@example.org", User.blind_indexes[:email]).inspect %>
+  encrypted_email_bidx: <%= User.compute_email_bidx("test@example.org").inspect %>
 ```
 
 ## History
