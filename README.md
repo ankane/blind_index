@@ -133,7 +133,7 @@ test_user:
 
 ## Algorithms [master, not production-ready]
 
-The default hashing algorithm is PBKDF2-HMAC-SHA256, but a number of others are supported.
+The default hashing algorithm is PBKDF2-HMAC-SHA256, but a number of others are available.
 
 ### scrypt
 
