@@ -1,6 +1,6 @@
 module BlindIndex
   module Model
-    def blind_index(name, key: nil, iterations: nil, attribute: nil, expression: nil, bidx_attribute: nil, callback: true)
+    def blind_index(name, key: nil, iterations: nil, attribute: nil, expression: nil, bidx_attribute: nil, callback: true, algorithm: :pbkdf2_hmac)
       iterations ||= 10000
       attribute ||= name
       bidx_attribute ||= :"encrypted_#{name}_bidx"
@@ -23,7 +23,8 @@ module BlindIndex
           iterations: iterations,
           attribute: attribute,
           expression: expression,
-          bidx_attribute: bidx_attribute
+          bidx_attribute: bidx_attribute,
+          algorithm: algorithm
         }
 
         define_singleton_method method_name do |value|

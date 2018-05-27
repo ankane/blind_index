@@ -131,6 +131,30 @@ test_user:
   encrypted_email_bidx: <%= User.compute_email_bidx("test@example.org").inspect %>
 ```
 
+## Algorithms [master, not production-ready]
+
+The default hashing algorithm is PBKDF2-HMAC-SHA256, but a number of others are supported.
+
+### scrypt
+
+Add [scrypt](https://github.com/pbhogan/scrypt) to your Gemfile and use:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, algorithm: :scrypt, ...
+end
+```
+
+### Argon2
+
+Add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and use:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, algorithm: :argon2, ...
+end
+```
+
 ## History
 
 View the [changelog](https://github.com/ankane/blind_index/blob/master/CHANGELOG.md)

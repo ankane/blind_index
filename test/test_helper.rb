@@ -4,6 +4,8 @@ require "attr_encrypted"
 Bundler.require(:default)
 require "minitest/autorun"
 require "minitest/pride"
+require "scrypt"
+require "argon2"
 
 ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 
@@ -25,7 +27,7 @@ class User < ActiveRecord::Base
   attr_encrypted :email, key: "0"*32
 
   blind_index :email, key: "1"*32
-  blind_index :email_ci, key: -> { "2"*32 }, attribute: :email, expression: ->(v) { v.try(:downcase) }
+  blind_index :email_ci, algorithm: :argon2, key: -> { "2"*32 }, attribute: :email, expression: ->(v) { v.try(:downcase) }
 
   validates :email, uniqueness: true
   validates :email_ci, uniqueness: true
