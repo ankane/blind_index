@@ -133,11 +133,13 @@ test_user:
 
 Be sure to include the `inspect` at the end, or it won’t be encoded properly in YAML.
 
-## Algorithms [master, not production-ready]
+## Algorithms
 
 The default hashing algorithm is PBKDF2-HMAC-SHA256, but a number of others are available.
 
 ### scrypt
+
+:warning: *Only available on master, and not production ready*
 
 Add [scrypt](https://github.com/pbhogan/scrypt) to your Gemfile and use:
 
@@ -148,6 +150,8 @@ end
 ```
 
 ### Argon2
+
+:warning: *Only available on master, and not production ready*
 
 Add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and use:
 
