@@ -131,6 +131,8 @@ test_user:
   encrypted_email_bidx: <%= User.compute_email_bidx("test@example.org").inspect %>
 ```
 
+Be sure to include the `inspect` at the end, or it won’t be encoded properly in YAML.
+
 ## Algorithms [master, not production-ready]
 
 The default hashing algorithm is PBKDF2-HMAC-SHA256, but a number of others are available.
