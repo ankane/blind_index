@@ -163,6 +163,10 @@ class User < ApplicationRecord
 end
 ```
 
+## Alternatives
+
+One alternative to blind indexing is to use a deterministic encryption scheme, like [AES-SIV](https://github.com/miscreant/miscreant). In this approach, the encrypted data will be the same for matches.
+
 ## History
 
 View the [changelog](https://github.com/ankane/blind_index/blob/master/CHANGELOG.md)
