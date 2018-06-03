@@ -42,11 +42,11 @@ module BlindIndex
       value =
         case algorithm
         when :scrypt
-          # n, p (keep r at 8)
+          # n, r, p
           SCrypt::Engine.scrypt(value.to_s, key, 4096, 8, 1, 32)
         when :argon2
           # t_cost, m_cost
-          [Argon2::Engine.hash_argon2i(value.to_s, key, 2, 12)].pack("H*")
+          [Argon2::Engine.hash_argon2i(value.to_s, key, 3, 12)].pack("H*")
         when :pbkdf2_hmac
           OpenSSL::PKCS5.pbkdf2_hmac(value.to_s, key, options[:iterations], 32, "sha256")
         else
