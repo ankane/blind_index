@@ -10,7 +10,7 @@ Here’s a [full example](https://shorts.dokkuapp.com/securing-user-emails-in-ra
 
 ## How It Works
 
-We use [this approach](https://www.sitepoint.com/how-to-search-on-securely-encrypted-database-fields/) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function (PBKDF2-HMAC-SHA256) to the value we’re searching and then perform a database search. This results in performant queries for equality operations, while keeping the data secure from those without the key.
+We use [this approach](https://www.sitepoint.com/how-to-search-on-securely-encrypted-database-fields/) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function (PBKDF2-HMAC-SHA256 by default) to the value we’re searching and then perform a database search. This results in performant queries for equality operations, while keeping the data secure from those without the key.
 
 ## Getting Started
 
@@ -37,16 +37,22 @@ And add to your model
 
 ```ruby
 class User < ApplicationRecord
-  attr_encrypted :email, key: ENV["EMAIL_ENCRYPTION_KEY"]
-  blind_index :email, key: ENV["EMAIL_BLIND_INDEX_KEY"]
+  attr_encrypted :email, key: [ENV["EMAIL_ENCRYPTION_KEY"]].pack("H*")
+  blind_index :email, key: [ENV["EMAIL_BLIND_INDEX_KEY"]].pack("H*")
 end
 ```
 
-We use environment variables to store the keys ([dotenv](https://github.com/bkeepers/dotenv) is great for this). *Do not commit them to source control.* Generate one key for encryption and one key for hashing. For development, you can use these:
+We use environment variables to store the keys ([dotenv](https://github.com/bkeepers/dotenv) is great for this). *Do not commit them to source control.* Generate one key for encryption and one key for hashing. You can generate keys in the Rails console with:
+
+```ruby
+SecureRandom.hex(32)
+```
+
+For development, you can use these:
 
 ```sh
-EMAIL_ENCRYPTION_KEY=00000000000000000000000000000000
-EMAIL_BLIND_INDEX_KEY=99999999999999999999999999999999
+EMAIL_ENCRYPTION_KEY=0000000000000000000000000000000000000000000000000000000000000000
+EMAIL_BLIND_INDEX_KEY=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 ```
 
 And query away
@@ -101,18 +107,6 @@ Search with:
 User.where(email_ci: "test@example.org")
 ```
 
-## Key Stretching
-
-Key stretching increases the amount of time required to compute hashes, which slows down brute-force attacks. You can set the number of iterations with:
-
-```ruby
-class User < ApplicationRecord
-  blind_index :email, iterations: 1000000, ...
-end
-```
-
-The default is `10000`. Changing this value requires you to recompute the blind index.
-
 ## Index Only
 
 If you don’t need to store the original value (for instance, when just checking duplicates), use a virtual attribute:
@@ -137,11 +131,22 @@ Be sure to include the `inspect` at the end, or it won’t be encoded properly i
 
 ## Algorithms
 
-The default hashing algorithm is PBKDF2-HMAC-SHA256, but a number of others are available.
+### PBKDF2-HMAC-SHA256
+
+The default hashing algorithm. [Key stretching](https://en.wikipedia.org/wiki/Key_stretching) increases the amount of time required to compute hashes, which slows down brute-force attacks. You can set the number of iterations with:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, iterations: 1000000, ...
+end
+```
+
+The default is `10000`. Changing this value requires you to recompute the blind index.
+
 
 ### scrypt
 
-:warning: *Only available on master, and not production ready*
+:warning: *Not production ready yet*
 
 Add [scrypt](https://github.com/pbhogan/scrypt) to your Gemfile and use:
 
@@ -153,7 +158,7 @@ end
 
 ### Argon2
 
-:warning: *Only available on master, and not production ready*
+:warning: *Not production ready yet*
 
 Add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and use:
 
@@ -163,9 +168,48 @@ class User < ApplicationRecord
 end
 ```
 
+## Reference
+
+By default, blind indexes are encoded in Base64. Set a different encoding with:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, encode: ->(v) { [v].pack("H*") }
+end
+```
+
 ## Alternatives
 
 One alternative to blind indexing is to use a deterministic encryption scheme, like [AES-SIV](https://github.com/miscreant/miscreant). In this approach, the encrypted data will be the same for matches.
+
+## Upgrading
+
+### 0.3.0
+
+This version introduces a breaking change to enforce secure key generation. An error is thrown if your blind index key isn’t both binary and 32 bytes.
+
+We recommend rotating your key if it doesn’t meet this criteria. You can generate a new key in the Rails console with:
+
+```ruby
+SecureRandom.hex(32)
+```
+
+Set the new key and recompute the blind index.
+
+```ruby
+User.find_each do |user|
+  user.compute_email_bidx
+  user.save!
+end
+```
+
+To continue without rotating, set:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, insecure_key: true, ...
+end
+```
 
 ## History
 

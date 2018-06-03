@@ -35,6 +35,12 @@ class BlindIndexTest < Minitest::Test
     assert User.where(email_ci: "test@example.org").first
   end
 
+  def test_encode
+    user = create_user
+    assert User.find_by(email_binary: "test@example.org")
+    assert_equal 32, user.encrypted_email_binary_bidx.bytesize
+  end
+
   def test_validation
     create_user
     user = User.new(email: "test@example.org")
@@ -74,6 +80,27 @@ class BlindIndexTest < Minitest::Test
   def test_class_method
     user = create_user
     assert_equal user.encrypted_email_bidx, User.compute_email_bidx("test@example.org")
+  end
+
+  def test_secure_key
+    error = assert_raises(BlindIndex::Error) do
+      BlindIndex.generate_bidx("test@example.org", key: "bad")
+    end
+    assert_equal "Key must use binary encoding", error.message
+  end
+
+  # def test_secure_key_ascii
+  #   error = assert_raises(BlindIndex::Error) do
+  #     BlindIndex.generate_bidx("test@example.org", key: ("0"*32).encode("BINARY"))
+  #   end
+  #   assert_equal "Key must not be ASCII", error.message
+  # end
+
+  def test_secure_key_length
+    error = assert_raises(BlindIndex::Error) do
+      BlindIndex.generate_bidx("test@example.org", key: SecureRandom.random_bytes(20))
+    end
+    assert_equal "Key must be 32 bytes", error.message
   end
 
   private

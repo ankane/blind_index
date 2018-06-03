@@ -1,3 +1,9 @@
+## 0.3.0 [unreleased]
+
+- Enforce secure key generation
+- Added `encode` option
+- Added `default_options` method
+
 ## 0.2.1
 
 - Added class method to compute blind index
