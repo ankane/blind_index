@@ -42,7 +42,7 @@ class User < ApplicationRecord
 end
 ```
 
-We use environment variables to store the keys ([dotenv](https://github.com/bkeepers/dotenv) is great for this). *Do not commit them to source control.* Generate one key for encryption and one key for hashing. You can generate keys in the Rails console with:
+We use environment variables to store the keys as hex-encoded strings ([dotenv](https://github.com/bkeepers/dotenv) is great for this). *Do not commit them to source control.* Generate one key for encryption and one key for hashing. You can generate keys in the Rails console with:
 
 ```ruby
 SecureRandom.hex(32)
@@ -209,7 +209,15 @@ We recommend rotating your key if it doesn’t meet this criteria. You can gener
 SecureRandom.hex(32)
 ```
 
-Set the new key and recompute the blind index.
+Update your model to convert the hex key to binary.
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, key: [ENV["EMAIL_BLIND_INDEX_KEY"]].pack("H*")
+end
+```
+
+And recompute the blind index.
 
 ```ruby
 User.find_each do |user|
