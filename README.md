@@ -179,7 +179,7 @@ Set the cost parameters with: [master]
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, algorithm: :scrypt, cost: {t: 3, m: 12}, ...
+  blind_index :email, algorithm: :argon2, cost: {t: 3, m: 12}, ...
 end
 ```
 
