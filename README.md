@@ -143,7 +143,6 @@ end
 
 The default is `10000`. Changing this value requires you to recompute the blind index.
 
-
 ### scrypt
 
 :warning: *Not production ready yet*
@@ -156,6 +155,14 @@ class User < ApplicationRecord
 end
 ```
 
+Set the cost parameters with: [master]
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, algorithm: :scrypt, cost: {n: 4096, r: 8, p: 1}, ...
+end
+```
+
 ### Argon2
 
 :warning: *Not production ready yet*
@@ -165,6 +172,14 @@ Add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and use:
 ```ruby
 class User < ApplicationRecord
   blind_index :email, algorithm: :argon2, ...
+end
+```
+
+Set the cost parameters with: [master]
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, algorithm: :scrypt, cost: {t: 3, m: 12}, ...
 end
 ```
 

@@ -1,3 +1,7 @@
+## 0.3.1 [unreleased]
+
+- Added `cost` option
+
 ## 0.3.0
 
 - Enforce secure key generation

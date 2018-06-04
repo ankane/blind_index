@@ -15,7 +15,8 @@ module BlindIndex
     iterations: 10000,
     algorithm: :pbkdf2_hmac,
     insecure_key: false,
-    encode: true
+    encode: true,
+    cost: {}
   }
 
   def self.generate_bidx(value, key:, **options)
@@ -39,16 +40,22 @@ module BlindIndex
 
       # gist to compare algorithm results
       # https://gist.github.com/ankane/fe3ac63fbf1c4550ee12554c664d2b8c
+      cost_options = options[:cost]
+
       value =
         case algorithm
         when :scrypt
-          # n, r, p
-          SCrypt::Engine.scrypt(value.to_s, key, 4096, 8, 1, 32)
+          n = cost_options[:n] || 4096
+          r = cost_options[:r] || 8
+          cp = cost_options[:p] || 1
+          SCrypt::Engine.scrypt(value.to_s, key, n, r, cp, 32)
         when :argon2
-          # t_cost, m_cost
-          [Argon2::Engine.hash_argon2i(value.to_s, key, 3, 12)].pack("H*")
+          t = cost_options[:t] || 3
+          m = cost_options[:m] || 12
+          [Argon2::Engine.hash_argon2i(value.to_s, key, t, m)].pack("H*")
         when :pbkdf2_hmac
-          OpenSSL::PKCS5.pbkdf2_hmac(value.to_s, key, options[:iterations], 32, "sha256")
+          iterations = cost_options[:iterations] || options[:iterations]
+          OpenSSL::PKCS5.pbkdf2_hmac(value.to_s, key, iterations, 32, "sha256")
         else
           raise BlindIndex::Error, "Unknown algorithm"
         end
