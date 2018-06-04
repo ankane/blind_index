@@ -30,6 +30,7 @@ module BlindIndex
           cost: cost
         }.reject { |_, v| v.nil? }
 
+        # should have been named generate_#{name}_bidx
         define_singleton_method method_name do |value|
           BlindIndex.generate_bidx(value, blind_indexes[name])
         end
