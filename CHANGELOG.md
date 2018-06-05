@@ -1,5 +1,6 @@
-## 0.3.1 [unreleased]
+## 0.3.1
 
+- Added scrypt and Argon2 algorithms
 - Added `cost` option
 
 ## 0.3.0

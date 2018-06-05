@@ -145,8 +145,6 @@ The default is `10000`. Changing this value requires you to recompute the blind 
 
 ### scrypt
 
-:warning: *Not production ready yet*
-
 Add [scrypt](https://github.com/pbhogan/scrypt) to your Gemfile and use:
 
 ```ruby
@@ -155,7 +153,7 @@ class User < ApplicationRecord
 end
 ```
 
-Set the cost parameters with: [master]
+Set the cost parameters with:
 
 ```ruby
 class User < ApplicationRecord
@@ -165,8 +163,6 @@ end
 
 ### Argon2
 
-:warning: *Not production ready yet*
-
 Add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and use:
 
 ```ruby
@@ -175,7 +171,7 @@ class User < ApplicationRecord
 end
 ```
 
-Set the cost parameters with: [master]
+Set the cost parameters with:
 
 ```ruby
 class User < ApplicationRecord
