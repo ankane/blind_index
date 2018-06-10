@@ -10,19 +10,47 @@ end
 
 task default: :test
 
-task :benchmark do
-  require "securerandom"
-  require "benchmark/ips"
-  require "blind_index"
-  require "scrypt"
-  require "argon2"
+namespace :benchmark do
+  task :algorithms do
+    require "securerandom"
+    require "benchmark/ips"
+    require "blind_index"
+    require "scrypt"
+    require "argon2"
 
-  key = SecureRandom.random_bytes(32)
-  value = "secret"
+    key = SecureRandom.random_bytes(32)
+    value = "secret"
 
-  Benchmark.ips do |x|
-    x.report("pbkdf2_hmac") { BlindIndex.generate_bidx(value, key: key, algorithm: :pbkdf2_hmac) }
-    x.report("scrypt") { BlindIndex.generate_bidx(value, key: key, algorithm: :scrypt) }
-    x.report("argon2") { BlindIndex.generate_bidx(value, key: key, algorithm: :argon2) }
+    Benchmark.ips do |x|
+      x.report("pbkdf2_hmac") { BlindIndex.generate_bidx(value, key: key, algorithm: :pbkdf2_hmac) }
+      x.report("scrypt") { BlindIndex.generate_bidx(value, key: key, algorithm: :scrypt) }
+      x.report("argon2") { BlindIndex.generate_bidx(value, key: key, algorithm: :argon2) }
+    end
+  end
+
+  task :queries do
+    require "benchmark/ips"
+    require "active_record"
+    require "blind_index"
+
+    ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+
+    ActiveRecord::Migration.create_table :users do
+    end
+
+    ActiveRecord::Migration.create_table :cities do
+    end
+
+    class User < ActiveRecord::Base
+      blind_index :email
+    end
+
+    class City < ActiveRecord::Base
+    end
+
+    Benchmark.ips do |x|
+      x.report("no index") { City.where(id: 1).first }
+      x.report("index") { User.where(id: 1).first }
+    end
   end
 end
