@@ -103,6 +103,11 @@ class BlindIndexTest < Minitest::Test
     assert_equal "Key must be 32 bytes", error.message
   end
 
+  def test_inheritance
+    assert_equal %i[email email_ci email_binary], User.blind_indexes.keys
+    assert_equal %i[email email_ci email_binary child], ActiveUser.blind_indexes.keys
+  end
+
   private
 
   def create_user(email: "test@example.org")

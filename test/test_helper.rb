@@ -36,3 +36,7 @@ class User < ActiveRecord::Base
     super
   end
 end
+
+class ActiveUser < User
+  blind_index :child, key: SecureRandom.random_bytes(32)
+end
