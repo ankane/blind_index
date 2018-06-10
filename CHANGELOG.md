@@ -1,3 +1,7 @@
+## 0.3.2 [unreleased]
+
+- Added support for inherited models
+
 ## 0.3.1
 
 - Added scrypt and Argon2 algorithms

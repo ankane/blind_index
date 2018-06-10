@@ -10,15 +10,24 @@ module BlindIndex
       method_name = :"compute_#{name}_bidx"
 
       class_eval do
-        class << self
-          def blind_indexes
-            @blind_indexes ||= {}
-          end unless method_defined?(:blind_indexes)
+        @blind_indexes ||= {}
+
+        unless respond_to?(:blind_indexes)
+          def self.blind_indexes
+            parent_indexes =
+              if superclass.respond_to?(:blind_indexes)
+                superclass.blind_indexes
+              else
+                {}
+              end
+
+            parent_indexes.merge(@blind_indexes)
+          end
         end
 
         raise BlindIndex::Error, "Duplicate blind index: #{name}" if blind_indexes[name]
 
-        blind_indexes[name] = {
+        @blind_indexes[name] = {
           key: key,
           iterations: iterations,
           attribute: attribute,
