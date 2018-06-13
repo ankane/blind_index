@@ -70,7 +70,7 @@ module BlindIndex
 
     module DynamicMatchers
       def valid?
-        attribute_names.all? { |name| blind_index?(name.to_sym) || model.columns_hash[name] || model.reflect_on_aggregation(name.to_sym) }
+        attribute_names.all? { |name| model.columns_hash[name] || model.reflect_on_aggregation(name.to_sym) || blind_index?(name.to_sym) }
       end
 
       def blind_index?(name)
