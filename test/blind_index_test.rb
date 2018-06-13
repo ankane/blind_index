@@ -10,6 +10,12 @@ class BlindIndexTest < Minitest::Test
     assert User.find_by(email: "test@example.org")
   end
 
+  def test_dynamic_finders
+    user = create_user
+    assert User.find_by_email("test@example.org")
+    assert User.find_by_id_and_email(user.id, "test@example.org")
+  end
+
   def test_where
     create_user
     assert User.where(email: "test@example.org").first

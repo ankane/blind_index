@@ -67,5 +67,15 @@ module BlindIndex
         end
       end
     end
+
+    module DynamicMatchers
+      def valid?
+        attribute_names.all? { |name| blind_index?(name.to_sym) || model.columns_hash[name] || model.reflect_on_aggregation(name.to_sym) }
+      end
+
+      def blind_index?(name)
+        model.respond_to?(:blind_indexes) && model.blind_indexes[name]
+      end
+    end
   end
 end

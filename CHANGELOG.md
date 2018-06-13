@@ -1,5 +1,6 @@
 ## 0.3.2 [unreleased]
 
+- Added support for dynamic finders
 - Added support for inherited models
 
 ## 0.3.1

@@ -84,6 +84,8 @@ ActiveSupport.on_load(:active_record) do
     ActiveRecord::PredicateBuilder.singleton_class.prepend(BlindIndex::Extensions::PredicateBuilder)
   end
 
+  ActiveRecord::DynamicMatchers::Method.prepend(BlindIndex::Extensions::DynamicMatchers)
+
   unless ActiveRecord::VERSION::STRING.start_with?("5.1.")
     ActiveRecord::Validations::UniquenessValidator.prepend(BlindIndex::Extensions::UniquenessValidator)
   end
