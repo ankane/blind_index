@@ -21,7 +21,7 @@ module BlindIndex
                 {}
               end
 
-            parent_indexes.merge(@blind_indexes)
+            parent_indexes.merge(@blind_indexes || {})
           end
         end
 
