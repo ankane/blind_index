@@ -179,6 +179,46 @@ class User < ApplicationRecord
 end
 ```
 
+## Key Rotation
+
+To rotate keys without downtime, add a new column:
+
+```ruby
+add_column :users, :encrypted_email_v2_bidx, :string
+add_index :users, :encrypted_email_v2_bidx
+```
+
+And add to your model
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, key: [ENV["EMAIL_BLIND_INDEX_KEY"]].pack("H*")
+  blind_index :email_v2, attribute: :email, key: [ENV["EMAIL_V2_BLIND_INDEX_KEY"]].pack("H*")
+end
+```
+
+Backfill the data
+
+```ruby
+User.find_each do |user|
+  user.compute_email_v2_bidx
+  user.save!
+end
+```
+
+Then update your model
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, bidx_attribute: :encrypted_email_v2_bidx, key: [ENV["EMAIL_V2_BLIND_INDEX_KEY"]].pack("H*")
+
+  # remove this line after dropping column
+  self.ignored_columns = ["encrypted_email_bidx"]
+end
+```
+
+Finally, drop the old column.
+
 ## Reference
 
 By default, blind indexes are encoded in Base64. Set a different encoding with:
