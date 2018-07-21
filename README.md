@@ -120,10 +120,12 @@ end
 
 ## Fixtures
 
-You can use blind indexes in fixtures with:
+You can use encrypted attributes and blind indexes in fixtures with:
 
 ```yml
 test_user:
+  encrypted_email: <%= User.encrypt_email("test@example.org", iv: Base64.decode64("0000000000000000")) %>
+  encrypted_email_iv: "0000000000000000"
   encrypted_email_bidx: <%= User.compute_email_bidx("test@example.org").inspect %>
 ```
 
