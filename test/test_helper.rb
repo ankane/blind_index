@@ -27,7 +27,7 @@ ActiveRecord::Migration.create_table :users do |t|
 end
 
 class User < ActiveRecord::Base
-  attribute :initials
+  attribute :initials, ActiveRecord::Type::String.new if ActiveRecord::VERSION::MAJOR >= 5
 
   before_validation :set_initials, if: -> { changes.key?(:first_name) || changes.key?(:last_name) }
 

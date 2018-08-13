@@ -118,6 +118,10 @@ class User < ApplicationRecord
 end
 ```
 
+*Requires ActiveRecord 5.1+*
+
+## Multiple Columns
+
 You can also use virtual attributes to index data from multiple columns:
 
 ```ruby
@@ -133,6 +137,8 @@ class User < ApplicationRecord
   end
 end
 ```
+
+*Requires ActiveRecord 5.1+*
 
 ## Fixtures
 
