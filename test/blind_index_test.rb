@@ -117,7 +117,12 @@ class BlindIndexTest < Minitest::Test
   def test_initials
     skip unless ActiveRecord::VERSION::MAJOR >= 5
 
-    create_user(first_name: "Test", last_name: "User")
+    user = create_user(first_name: "Test", last_name: "User")
+    assert User.find_by(initials: "TU")
+
+    user = User.last
+    user.email = "test2@example.org"
+    user.save!
     assert User.find_by(initials: "TU")
   end
 
