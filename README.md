@@ -118,6 +118,22 @@ class User < ApplicationRecord
 end
 ```
 
+You can also use virtual attributes to index data from multiple columns:
+
+```ruby
+class User < ApplicationRecord
+  attribute :initials
+
+  # must come before blind_index method
+  before_validation :set_initials, if: -> { changes.key?(:first_name) || changes.key?(:last_name) }
+  blind_index :initials, ...
+
+  def set_initials
+    self.initials = "#{first_name[0]}#{last_name[0]}"
+  end
+end
+```
+
 ## Fixtures
 
 You can use encrypted attributes and blind indexes in fixtures with:

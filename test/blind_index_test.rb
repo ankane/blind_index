@@ -110,13 +110,18 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_inheritance
-    assert_equal %i[email email_ci email_binary], User.blind_indexes.keys
-    assert_equal %i[email email_ci email_binary child], ActiveUser.blind_indexes.keys
+    assert_equal %i[email email_ci email_binary initials], User.blind_indexes.keys
+    assert_equal %i[email email_ci email_binary initials child], ActiveUser.blind_indexes.keys
+  end
+
+  def test_initials
+    create_user(first_name: "Test", last_name: "User")
+    assert User.find_by(initials: "TU")
   end
 
   private
 
-  def create_user(email: "test@example.org")
-    User.create!(email: email)
+  def create_user(email: "test@example.org", **attributes)
+    User.create!({email: email}.merge(attributes))
   end
 end
