@@ -42,7 +42,7 @@ class User < ApplicationRecord
 end
 ```
 
-We use environment variables to store the keys as hex-encoded strings ([dotenv](https://github.com/bkeepers/dotenv) is great for this). *Do not commit them to source control.* Generate one key for encryption and one key for hashing. You can generate keys in the Rails console with:
+We use environment variables to store the keys as hex-encoded strings ([dotenv](https://github.com/bkeepers/dotenv) is great for this). [Here’s an explanation](https://github.com/ankane/shorts/blob/master/Encryption-Keys-Rails.md) of why `pack` is used. *Do not commit them to source control.* Generate one key for encryption and one key for hashing. You can generate keys in the Rails console with:
 
 ```ruby
 SecureRandom.hex(32)
