@@ -4,7 +4,7 @@ Securely search encrypted database fields
 
 Designed for use with [attr_encrypted](https://github.com/attr-encrypted/attr_encrypted)
 
-Here’s a [full example](https://shorts.dokkuapp.com/securing-user-emails-in-rails/) of how to use it with Devise
+Here’s a [full example](https://ankane.org/securing-user-emails-in-rails) of how to use it with Devise
 
 [![Build Status](https://travis-ci.org/ankane/blind_index.svg?branch=master)](https://travis-ci.org/ankane/blind_index)
 
