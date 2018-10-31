@@ -1,3 +1,7 @@
+## 0.3.3 [unreleased]
+
+- Added support for string keys in finders
+
 ## 0.3.2
 
 - Added support for dynamic finders

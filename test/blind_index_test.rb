@@ -10,6 +10,11 @@ class BlindIndexTest < Minitest::Test
     assert User.find_by(email: "test@example.org")
   end
 
+  def test_find_by_string_key
+    create_user
+    assert User.find_by({"email" => "test@example.org"})
+  end
+
   def test_dynamic_finders
     user = create_user
     assert User.find_by_email("test@example.org")
@@ -19,6 +24,11 @@ class BlindIndexTest < Minitest::Test
   def test_where
     create_user
     assert User.where(email: "test@example.org").first
+  end
+
+  def test_where_string_key
+    create_user
+    assert User.where({"email" => "test@example.org"}).first
   end
 
   def test_where_not
