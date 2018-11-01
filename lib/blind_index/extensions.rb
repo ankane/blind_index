@@ -6,7 +6,7 @@ module BlindIndex
         new_hash = super
         if has_blind_indexes?
           hash.each do |key, _|
-            if (bi = klass.blind_indexes[key.to_sym]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
+            if key.respond_to?(:to_sym) && (bi = klass.blind_indexes[key.to_sym]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
               new_hash[bi[:bidx_attribute]] = BlindIndex.generate_bidx(new_hash.delete(key), bi)
             end
           end
@@ -29,7 +29,7 @@ module BlindIndex
         new_hash = super
         if has_blind_indexes?(klass)
           hash.each do |key, _|
-            if (bi = klass.blind_indexes[key.to_sym]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
+            if key.respond_to?(:to_sym) && (bi = klass.blind_indexes[key.to_sym]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
               new_hash[bi[:bidx_attribute]] = BlindIndex.generate_bidx(new_hash.delete(key), bi)
             end
           end
