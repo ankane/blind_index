@@ -27,6 +27,7 @@ Add columns for the encrypted data and the blind index
 # encrypted data
 add_column :users, :encrypted_email, :string
 add_column :users, :encrypted_email_iv, :string
+add_index :users, :encrypted_email_iv, unique: true
 
 # blind index
 add_column :users, :encrypted_email_bidx, :string
