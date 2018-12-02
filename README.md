@@ -34,6 +34,8 @@ add_column :users, :encrypted_email_bidx, :string
 add_index :users, :encrypted_email_bidx
 ```
 
+**Note:** We add a unique index on the IV because reusing an IV with the same key in AES-GCM (the default for attr_encrypted) can lead to [full compromise](https://csrc.nist.gov/csrc/media/projects/block-cipher-techniques/documents/bcm/joux_comments.pdf) of the key.
+
 And add to your model
 
 ```ruby
