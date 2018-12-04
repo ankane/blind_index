@@ -136,7 +136,23 @@ class BlindIndexTest < Minitest::Test
     assert User.find_by(initials: "TU")
   end
 
+  def test_size
+    result = BlindIndex.generate_bidx("secret", key: random_key, size: 16, encode: false)
+    assert_equal 16, result.bytesize
+  end
+
+  def test_invalid_size
+    error = assert_raises(BlindIndex::Error) do
+      BlindIndex.generate_bidx("secret", key: random_key, size: 0, encode: false)
+    end
+    assert_equal "Size must be between 1 and 32", error.message
+  end
+
   private
+
+  def random_key
+    SecureRandom.random_bytes(32)
+  end
 
   def create_user(email: "test@example.org", **attributes)
     User.create!({email: email}.merge(attributes))

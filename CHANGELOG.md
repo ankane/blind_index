@@ -1,3 +1,7 @@
+## 0.3.4 [unreleased]
+
+- Added `size` option
+
 ## 0.3.3
 
 - Added support for string keys in finders

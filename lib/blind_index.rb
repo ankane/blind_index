@@ -42,20 +42,28 @@ module BlindIndex
       # https://gist.github.com/ankane/fe3ac63fbf1c4550ee12554c664d2b8c
       cost_options = options[:cost]
 
+      # check size
+      size = (options[:size] || 32).to_i
+      raise BlindIndex::Error, "Size must be between 1 and 32" unless (1..32).include?(size)
+
+      value = value.to_s
+
       value =
         case algorithm
         when :scrypt
           n = cost_options[:n] || 4096
           r = cost_options[:r] || 8
           cp = cost_options[:p] || 1
-          SCrypt::Engine.scrypt(value.to_s, key, n, r, cp, 32)
+          SCrypt::Engine.scrypt(value, key, n, r, cp, size)
         when :argon2
           t = cost_options[:t] || 3
           m = cost_options[:m] || 12
-          [Argon2::Engine.hash_argon2i(value.to_s, key, t, m)].pack("H*")
+          # limitation of argon2 gem
+          raise BlindIndex::Error, "Size must be 32" unless size == 32
+          [Argon2::Engine.hash_argon2i(value, key, t, m)].pack("H*")
         when :pbkdf2_hmac
           iterations = cost_options[:iterations] || options[:iterations]
-          OpenSSL::PKCS5.pbkdf2_hmac(value.to_s, key, iterations, 32, "sha256")
+          OpenSSL::PKCS5.pbkdf2_hmac(value, key, iterations, size, "sha256")
         else
           raise BlindIndex::Error, "Unknown algorithm"
         end
