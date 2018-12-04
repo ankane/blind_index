@@ -1,5 +1,6 @@
+dist: xenial
 language: ruby
-rvm: 2.4.2
+rvm: 2.5.3
 gemfile:
   - Gemfile
   - test/gemfiles/activerecord51.gemfile
