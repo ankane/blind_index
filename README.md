@@ -157,7 +157,7 @@ class User < ApplicationRecord
 end
 ```
 
-> Changing this value requires you to recompute the blind index.
+> Changing this requires you to recompute the blind index.
 
 ### Argon2
 
@@ -179,7 +179,7 @@ class User < ApplicationRecord
 end
 ```
 
-> Changing this value requires you to recompute the blind index.
+> Changing this requires you to recompute the blind index.
 
 ## Key Rotation
 
