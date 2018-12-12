@@ -143,19 +143,6 @@ end
 
 *Requires ActiveRecord 5.1+*
 
-## Fixtures
-
-You can use encrypted attributes and blind indexes in fixtures with:
-
-```yml
-test_user:
-  encrypted_email: <%= User.encrypt_email("test@example.org", iv: Base64.decode64("0000000000000000")) %>
-  encrypted_email_iv: "0000000000000000"
-  encrypted_email_bidx: <%= User.compute_email_bidx("test@example.org").inspect %>
-```
-
-Be sure to include the `inspect` at the end, or it won’t be encoded properly in YAML.
-
 ## Algorithms
 
 ### PBKDF2-SHA256
@@ -233,6 +220,19 @@ end
 ```
 
 Finally, drop the old column.
+
+## Fixtures
+
+You can use encrypted attributes and blind indexes in fixtures with:
+
+```yml
+test_user:
+  encrypted_email: <%= User.encrypt_email("test@example.org", iv: Base64.decode64("0000000000000000")) %>
+  encrypted_email_iv: "0000000000000000"
+  encrypted_email_bidx: <%= User.compute_email_bidx("test@example.org").inspect %>
+```
+
+Be sure to include the `inspect` at the end, or it won’t be encoded properly in YAML.
 
 ## Reference
 
