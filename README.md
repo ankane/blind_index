@@ -183,6 +183,10 @@ end
 
 The variant used is Argon2i.
 
+### Other
+
+Scrypt is [also supported](docs/Scrypt.md). Unless you have specific reasons to use it, go with Argon2 instead.
+
 ## Key Rotation
 
 To rotate keys without downtime, add a new column:
