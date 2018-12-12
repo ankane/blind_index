@@ -56,9 +56,15 @@ module BlindIndex
           cp = cost_options[:p] || 1
           SCrypt::Engine.scrypt(value, key, n, r, cp, size)
         when :argon2
-          t = cost_options[:t] || 3
+          t = (cost_options[:t] || 3).to_i
+          # use same bounds as rbnacl
+          raise BlindIndex::Error, "t must be between 3 and 10" if t < 3 || t > 10
+
           # m is memory in kibibytes (1024 bytes)
-          m = cost_options[:m] || 12
+          m = (cost_options[:m] || 12).to_i
+          # use same bounds as rbnacl
+          raise BlindIndex::Error, "m must be between 3 and 22" if m < 3 || m > 22
+
           # 32 byte digest size is limitation of argon2 gem
           raise BlindIndex::Error, "Size must be 32" unless size == 32
           [Argon2::Engine.hash_argon2i(value, key, t, m)].pack("H*")
