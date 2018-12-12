@@ -12,49 +12,42 @@ Here’s a [full example](https://ankane.org/securing-user-emails-in-rails) of h
 
 We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function (PBKDF2-SHA256 by default) to the value we’re searching and then perform a database search. This results in performant queries for equality operations, while keeping the data secure from those without the key.
 
-## Getting Started
+## Installation
 
-Add these lines to your application’s Gemfile:
+Add this line to your application’s Gemfile:
 
 ```ruby
-gem 'attr_encrypted'
 gem 'blind_index'
 ```
 
-Add columns for the encrypted data and the blind index
+## Getting Started
+
+> Note: Your model should already be set up with attr_encrypted. The examples are for a `User` model with `attr_encrypted :email`. See the [full example](https://ankane.org/securing-user-emails-in-rails) if needed.
+
+Create a migration to add a column for the blind index
 
 ```ruby
-# encrypted data
-add_column :users, :encrypted_email, :string
-add_column :users, :encrypted_email_iv, :string
-add_index :users, :encrypted_email_iv, unique: true
-
-# blind index
 add_column :users, :encrypted_email_bidx, :string
 add_index :users, :encrypted_email_bidx
 ```
-
-**Note:** We add a unique index on the IV because reusing an IV with the same key in AES-GCM (the default algorithm for attr_encrypted) can lead to [full compromise](https://csrc.nist.gov/csrc/media/projects/block-cipher-techniques/documents/bcm/joux_comments.pdf) of the key.
 
 And add to your model
 
 ```ruby
 class User < ApplicationRecord
-  attr_encrypted :email, key: [ENV["EMAIL_ENCRYPTION_KEY"]].pack("H*")
   blind_index :email, key: [ENV["EMAIL_BLIND_INDEX_KEY"]].pack("H*")
 end
 ```
 
-We use environment variables to store the keys as hex-encoded strings ([dotenv](https://github.com/bkeepers/dotenv) is great for this). [Here’s an explanation](https://ankane.org/encryption-keys) of why `pack` is used. *Do not commit them to source control.* Generate one key for encryption and one key for hashing. You can generate keys in the Rails console with:
+We use an environment variable to store the key as a hex-encoded string ([dotenv](https://github.com/bkeepers/dotenv) is great for this). [Here’s an explanation](https://ankane.org/encryption-keys) of why `pack` is used. *Do not commit it to source control.* This should be different than the key you use for encryption. You can generate a key in the Rails console with:
 
 ```ruby
 SecureRandom.hex(32)
 ```
 
-For development, you can use these:
+For development, you can use this:
 
 ```sh
-EMAIL_ENCRYPTION_KEY=0000000000000000000000000000000000000000000000000000000000000000
 EMAIL_BLIND_INDEX_KEY=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 ```
 
