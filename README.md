@@ -162,11 +162,11 @@ Be sure to include the `inspect` at the end, or it won’t be encoded properly i
 
 The default hashing algorithm. [Key stretching](https://en.wikipedia.org/wiki/Key_stretching) increases the amount of time required to compute hashes, which slows down brute-force attacks.
 
-The default number of iterations is 10,000. For highly sensitive fields, set this to at least 50,000.
+The default number of iterations is 10,000. For highly sensitive fields, set this to at least 100,000.
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, iterations: 50000, ...
+  blind_index :email, iterations: 100000, ...
 end
 ```
 
