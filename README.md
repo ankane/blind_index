@@ -10,7 +10,7 @@ Here’s a [full example](https://ankane.org/securing-user-emails-in-rails) of h
 
 ## How It Works
 
-We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function (PBKDF2-HMAC-SHA256 by default) to the value we’re searching and then perform a database search. This results in performant queries for equality operations, while keeping the data secure from those without the key.
+We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function (PBKDF2-SHA256 by default) to the value we’re searching and then perform a database search. This results in performant queries for equality operations, while keeping the data secure from those without the key.
 
 ## Getting Started
 
