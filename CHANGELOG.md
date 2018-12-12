@@ -1,6 +1,7 @@
 ## 0.3.4 [unreleased]
 
 - Added `size` option
+- Added sanity checks for Argon2 cost parameters
 
 ## 0.3.3
 
