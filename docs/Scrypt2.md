@@ -1,4 +1,4 @@
-### Scrypt
+### scrypt
 
 Add [scrypt](https://github.com/pbhogan/scrypt) to your Gemfile and use:
 
