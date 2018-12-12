@@ -4,7 +4,7 @@ Securely search encrypted database fields
 
 Designed for use with [attr_encrypted](https://github.com/attr-encrypted/attr_encrypted)
 
-Here’s a [full example](https://ankane.org/securing-user-emails-in-rails) of how to use it with Devise
+Here’s a [full example](https://ankane.org/securing-user-emails-in-rails) of how to use it
 
 [![Build Status](https://travis-ci.org/ankane/blind_index.svg?branch=master)](https://travis-ci.org/ankane/blind_index)
 
@@ -158,39 +158,25 @@ Be sure to include the `inspect` at the end, or it won’t be encoded properly i
 
 ## Algorithms
 
-### PBKDF2-HMAC-SHA256
+### PBKDF2-SHA256
 
-The default hashing algorithm. [Key stretching](https://en.wikipedia.org/wiki/Key_stretching) increases the amount of time required to compute hashes, which slows down brute-force attacks. You can set the number of iterations with:
+The default hashing algorithm. [Key stretching](https://en.wikipedia.org/wiki/Key_stretching) increases the amount of time required to compute hashes, which slows down brute-force attacks.
 
-```ruby
-class User < ApplicationRecord
-  blind_index :email, iterations: 1000000, ...
-end
-```
-
-The default is `10000`. Changing this value requires you to recompute the blind index.
-
-### scrypt
-
-Add [scrypt](https://github.com/pbhogan/scrypt) to your Gemfile and use:
+The default number of iterations is 10,000. For highly sensitive fields, set this to at least 50,000.
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, algorithm: :scrypt, ...
+  blind_index :email, iterations: 50000, ...
 end
 ```
 
-Set the cost parameters with:
-
-```ruby
-class User < ApplicationRecord
-  blind_index :email, algorithm: :scrypt, cost: {n: 4096, r: 8, p: 1}, ...
-end
-```
+> Changing this value requires you to recompute the blind index.
 
 ### Argon2
 
-Add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and use:
+Argon2 is the state-of-the-art algorithm and recommended for best security.
+
+To use it, add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and use:
 
 ```ruby
 class User < ApplicationRecord
@@ -198,13 +184,15 @@ class User < ApplicationRecord
 end
 ```
 
-Set the cost parameters with:
+The default cost parameters are `{t: 3, m: 12}`. For highly sensitive fields, set this to at least `{t: 4, m: 15}`.
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, algorithm: :argon2, cost: {t: 3, m: 12}, ...
+  blind_index :email, algorithm: :argon2, cost: {t: 4, m: 15}, ...
 end
 ```
+
+> Changing this value requires you to recompute the blind index.
 
 ## Key Rotation
 

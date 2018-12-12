@@ -13,7 +13,7 @@ module BlindIndex
   end
   self.default_options = {
     iterations: 10000,
-    algorithm: :pbkdf2_hmac,
+    algorithm: :pbkdf2_sha256,
     insecure_key: false,
     encode: true,
     cost: {}
@@ -57,11 +57,12 @@ module BlindIndex
           SCrypt::Engine.scrypt(value, key, n, r, cp, size)
         when :argon2
           t = cost_options[:t] || 3
+          # m is memory in kibibytes (1024 bytes)
           m = cost_options[:m] || 12
-          # limitation of argon2 gem
+          # 32 byte digest size is limitation of argon2 gem
           raise BlindIndex::Error, "Size must be 32" unless size == 32
           [Argon2::Engine.hash_argon2i(value, key, t, m)].pack("H*")
-        when :pbkdf2_hmac
+        when :pbkdf2_sha256, :pbkdf2_hmac
           iterations = cost_options[:iterations] || options[:iterations]
           OpenSSL::PKCS5.pbkdf2_hmac(value, key, iterations, size, "sha256")
         else
