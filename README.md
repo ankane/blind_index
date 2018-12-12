@@ -176,7 +176,7 @@ end
 
 Argon2 is the state-of-the-art algorithm and recommended for best security.
 
-To use it, add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and use:
+To use it, add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and set:
 
 ```ruby
 class User < ApplicationRecord
