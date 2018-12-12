@@ -22,9 +22,9 @@ namespace :benchmark do
     value = "secret"
 
     Benchmark.ips do |x|
-      x.report("pbkdf2_hmac") { BlindIndex.generate_bidx(value, key: key, algorithm: :pbkdf2_hmac) }
-      x.report("scrypt") { BlindIndex.generate_bidx(value, key: key, algorithm: :scrypt) }
+      x.report("pbkdf2_sha256") { BlindIndex.generate_bidx(value, key: key, algorithm: :pbkdf2_sha256) }
       x.report("argon2") { BlindIndex.generate_bidx(value, key: key, algorithm: :argon2) }
+      # x.report("scrypt") { BlindIndex.generate_bidx(value, key: key, algorithm: :scrypt) }
     end
   end
 
