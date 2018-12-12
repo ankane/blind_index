@@ -27,14 +27,14 @@ module BlindIndex
 
     unless value.nil?
       algorithm = options[:algorithm].to_sym
+      algorithm = :pbkdf2_sha256 if algorithm == :pbkdf2_hmac
 
       key = key.call if key.respond_to?(:call)
       raise BlindIndex::Error, "Missing key for blind index" unless key
 
       key = key.to_s
-      unless options[:insecure_key] && algorithm == :pbkdf2_hmac
+      unless options[:insecure_key] && algorithm == :pbkdf2_sha256
         raise BlindIndex::Error, "Key must use binary encoding" if key.encoding != Encoding::BINARY
-        # raise BlindIndex::Error, "Key must not be ASCII" if key.bytes.all? { |b| b < 128 }
         raise BlindIndex::Error, "Key must be 32 bytes" if key.bytesize != 32
       end
 
@@ -68,7 +68,7 @@ module BlindIndex
           # 32 byte digest size is limitation of argon2 gem
           raise BlindIndex::Error, "Size must be 32" unless size == 32
           [Argon2::Engine.hash_argon2i(value, key, t, m)].pack("H*")
-        when :pbkdf2_sha256, :pbkdf2_hmac
+        when :pbkdf2_sha256
           iterations = cost_options[:iterations] || options[:iterations]
           OpenSSL::PKCS5.pbkdf2_hmac(value, key, iterations, size, "sha256")
         else
