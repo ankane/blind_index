@@ -181,6 +181,8 @@ end
 
 > Changing this requires you to recompute the blind index.
 
+The variant used is Argon2i.
+
 ## Key Rotation
 
 To rotate keys without downtime, add a new column:
