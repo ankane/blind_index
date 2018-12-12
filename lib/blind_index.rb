@@ -28,6 +28,7 @@ module BlindIndex
     unless value.nil?
       algorithm = options[:algorithm].to_sym
       algorithm = :pbkdf2_sha256 if algorithm == :pbkdf2_hmac
+      algorithm = :argon2i if algorithm == :argon2
 
       key = key.call if key.respond_to?(:call)
       raise BlindIndex::Error, "Missing key for blind index" unless key
@@ -55,7 +56,7 @@ module BlindIndex
           r = cost_options[:r] || 8
           cp = cost_options[:p] || 1
           SCrypt::Engine.scrypt(value, key, n, r, cp, size)
-        when :argon2
+        when :argon2i
           t = (cost_options[:t] || 3).to_i
           # use same bounds as rbnacl
           raise BlindIndex::Error, "t must be between 3 and 10" if t < 3 || t > 10
