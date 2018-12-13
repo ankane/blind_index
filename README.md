@@ -97,7 +97,7 @@ add_column :users, :encrypted_email_ci_bidx, :string
 add_index :users, :encrypted_email_ci_bidx
 ```
 
-And update your model
+Update your model
 
 ```ruby
 class User < ApplicationRecord
@@ -106,7 +106,7 @@ class User < ApplicationRecord
 end
 ```
 
-Backfill with:
+Backfill existing records
 
 ```ruby
 User.find_each do |user|
@@ -115,7 +115,7 @@ User.find_each do |user|
 end
 ```
 
-And search with:
+And query away
 
 ```ruby
 User.where(email_ci: "test@example.org")
