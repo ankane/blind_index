@@ -51,6 +51,15 @@ For development, you can use this:
 EMAIL_BLIND_INDEX_KEY=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 ```
 
+Backfill existing records
+
+```ruby
+User.find_each do |user|
+  user.compute_email_bidx
+  user.save!
+end
+```
+
 And query away
 
 ```ruby
