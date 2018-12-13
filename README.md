@@ -106,7 +106,16 @@ class User < ApplicationRecord
 end
 ```
 
-Search with:
+Backfill with:
+
+```ruby
+User.find_each do |user|
+  user.compute_email_ci_bidx
+  user.save!
+end
+```
+
+And search with:
 
 ```ruby
 User.where(email_ci: "test@example.org")
