@@ -1,7 +1,8 @@
-## 0.3.4 [unreleased]
+## 0.3.4
 
 - Added `size` option
 - Added sanity checks for Argon2 cost parameters
+- Fixed ActiveRecord callback issues introduced in 0.3.3
 
 ## 0.3.3
 
