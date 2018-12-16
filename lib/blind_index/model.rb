@@ -49,12 +49,7 @@ module BlindIndex
         end
 
         if callback
-          if ActiveRecord::VERSION::STRING >= "5.1"
-            before_validation method_name, if: :"will_save_change_to_#{attribute}?"
-          else
-            before_validation method_name, if: -> { changes.key?(attribute.to_s) }
-          end
-
+          before_validation method_name, if: -> { changes.key?(attribute.to_s) }
         end
 
         # use include so user can override
