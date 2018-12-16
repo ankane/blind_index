@@ -67,6 +67,8 @@ module BlindIndex
           raise BlindIndex::Error, "m must be between 3 and 22" if m < 3 || m > 22
 
           # 32 byte digest size is limitation of argon2 gem
+          # this is no longer the case on master
+          # TODO add conditional check when next version of argon2 is released
           raise BlindIndex::Error, "Size must be 32" unless size == 32
           [Argon2::Engine.hash_argon2i(value, key, t, m)].pack("H*")
         when :pbkdf2_sha256
