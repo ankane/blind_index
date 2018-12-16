@@ -262,6 +262,14 @@ class User < ApplicationRecord
 end
 ```
 
+By default, blind indexes are 32 bytes. Set a smaller size with:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, size: 16
+end
+```
+
 ## Alternatives
 
 One alternative to blind indexing is to use a deterministic encryption scheme, like [AES-SIV](https://github.com/miscreant/miscreant). In this approach, the encrypted data will be the same for matches.
