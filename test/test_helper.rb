@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
   blind_index :email, key: SecureRandom.random_bytes(32)
   blind_index :email_ci, algorithm: :scrypt, key: SecureRandom.random_bytes(32), attribute: :email, expression: ->(v) { v.try(:downcase) }
   blind_index :email_binary, algorithm: :argon2, key: SecureRandom.random_bytes(32), attribute: :email, encode: false
-  blind_index :initials, key: SecureRandom.random_bytes(32), size: 16
+  blind_index :initials, key: SecureRandom.hex(32), size: 16
 
   validates :email, uniqueness: true
   validates :email_ci, uniqueness: true

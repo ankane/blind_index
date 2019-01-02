@@ -35,6 +35,11 @@ module BlindIndex
 
       key = key.to_s
       unless options[:insecure_key] && algorithm == :pbkdf2_sha256
+        # decode hex key
+        if key.encoding != Encoding::BINARY && key =~ /\A[0-9a-f]{64}\z/i
+          key = [key].pack("H*")
+        end
+
         raise BlindIndex::Error, "Key must use binary encoding" if key.encoding != Encoding::BINARY
         raise BlindIndex::Error, "Key must be 32 bytes" if key.bytesize != 32
       end

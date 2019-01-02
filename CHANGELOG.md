@@ -1,3 +1,7 @@
+## 0.3.5 [unreleased]
+
+- Added support for hex keys
+
 ## 0.3.4
 
 - Added `size` option
