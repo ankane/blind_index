@@ -31,7 +31,21 @@ add_column :users, :encrypted_email_bidx, :string
 add_index :users, :encrypted_email_bidx
 ```
 
-And add to your model
+Next, generate a key
+
+```ruby
+SecureRandom.hex(32)
+```
+
+Store the key with your other secrets. This is typically Rails credentials or an environment variable ([dotenv](https://github.com/bkeepers/dotenv) is great for this). Be sure to use different keys in development and production, and be sure this is different than the key you use for encryption. Keys don’t need to be hex-encoded, but it’s often easier to store them this way.
+
+Here’s a key you can use in development
+
+```sh
+EMAIL_BLIND_INDEX_KEY=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+```
+
+Add to your model
 
 ```ruby
 class User < ApplicationRecord
@@ -39,17 +53,7 @@ class User < ApplicationRecord
 end
 ```
 
-We use an environment variable to store the key as a hex-encoded string ([dotenv](https://github.com/bkeepers/dotenv) is great for this). [Here’s an explanation](https://ankane.org/encryption-keys) of why `pack` is used. *Do not commit it to source control.* This should be different than the key you use for encryption. You can generate a key in the Rails console with:
-
-```ruby
-SecureRandom.hex(32)
-```
-
-For development, you can use this:
-
-```sh
-EMAIL_BLIND_INDEX_KEY=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-```
+> [Here’s an explanation](https://ankane.org/encryption-keys) of why `pack` is used
 
 Backfill existing records
 
