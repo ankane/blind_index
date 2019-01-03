@@ -55,7 +55,7 @@ class User < ApplicationRecord
 end
 ```
 
-> [Here’s an explanation](https://ankane.org/encryption-keys) of why `pack` is used
+> `pack` is used to decode the hex value
 
 Backfill existing records
 
