@@ -6,6 +6,8 @@ Designed for use with [attr_encrypted](https://github.com/attr-encrypted/attr_en
 
 Here’s a [full example](https://ankane.org/securing-user-emails-in-rails) of how to use it
 
+Check out [this post](https://ankane.org/sensitive-data-rails) for more info on securing sensitive data with Rails
+
 [![Build Status](https://travis-ci.org/ankane/blind_index.svg?branch=master)](https://travis-ci.org/ankane/blind_index)
 
 ## How It Works
