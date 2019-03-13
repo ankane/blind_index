@@ -9,7 +9,7 @@ module BlindIndex
             if key.respond_to?(:to_sym) && (bi = klass.blind_indexes[key.to_sym]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
               value = new_hash.delete(key)
               new_hash[bi[:bidx_attribute]] =
-                if value.instance_of?(Array)
+                if value.is_a?(Array)
                   value.map { |v| BlindIndex.generate_bidx(v, bi) }
                 else
                   BlindIndex.generate_bidx(value, bi)
@@ -38,7 +38,7 @@ module BlindIndex
             if key.respond_to?(:to_sym) && (bi = klass.blind_indexes[key.to_sym]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
               value = new_hash.delete(key)
               new_hash[bi[:bidx_attribute]] =
-                if value.instance_of?(Array)
+                if value.is_a?(Array)
                   value.map { |v| BlindIndex.generate_bidx(v, bi) }
                 else
                   BlindIndex.generate_bidx(value, bi)
