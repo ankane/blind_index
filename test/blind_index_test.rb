@@ -26,6 +26,12 @@ class BlindIndexTest < Minitest::Test
     assert User.where(email: "test@example.org").first
   end
 
+  def test_where_array
+    create_user
+    create_user(email: "test2@example.org")
+    assert_equal 2, User.where(email: ["test@example.org", "test2@example.org"]).count
+  end
+
   def test_where_string_key
     create_user
     assert User.where({"email" => "test@example.org"}).first
