@@ -12,7 +12,13 @@ Check out [this post](https://ankane.org/sensitive-data-rails) for more info on 
 
 ## How It Works
 
-We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function (PBKDF2-SHA256 by default) to the value we’re searching and then perform a database search. This results in performant queries for equality operations, while keeping the data secure from those without the key.
+We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function (PBKDF2-SHA256 by default) to the value we’re searching and then perform a database search. This results in performant queries for exact matches.
+
+## Leakage
+
+An important consideration in searchable encryption is leakage, which is information an attacker can gain. Blind indexing leaks that rows have the same value. If you use this for a field like last name, an attacker can use frequency analysis to predict the values. In an active attack where an attacker can control the input values, they can learn which other values in the database match.
+
+Here’s a [great article](https://blog.cryptographyengineering.com/2019/02/11/attack-of-the-week-searchable-encryption-and-the-ever-expanding-leakage-function/) on leakage in searchable encryption. Blind indexing has the same leakage as deterministic encryption.
 
 ## Installation
 
