@@ -79,6 +79,13 @@ module BlindIndex
         when :pbkdf2_sha256
           iterations = cost_options[:iterations] || options[:iterations]
           OpenSSL::PKCS5.pbkdf2_hmac(value, key, iterations, size, "sha256")
+        when :argon2id
+          hashed_key = RbNaCl::Hash::Blake2b.digest(key, digest_size: 16)
+          # TODO support t and m as well
+          opslimit = cost_options[:opslimit] || 4
+          memlimit = cost_options[:memlimit] || 33554432
+          pwhash = RbNaCl::PasswordHash::Argon2.new(opslimit, memlimit, size)
+          pwhash.digest(value, hashed_key, :argon2id)
         else
           raise BlindIndex::Error, "Unknown algorithm"
         end
