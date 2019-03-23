@@ -12,7 +12,7 @@ Check out [this post](https://ankane.org/sensitive-data-rails) for more info on 
 
 ## How It Works
 
-We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function (PBKDF2-SHA256 by default) to the value we’re searching and then perform a database search. This results in performant queries for exact matches.
+We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function to the value we’re searching and then perform a database search. This results in performant queries for exact matches. `LIKE` queries are not possible, but you can index expressions.
 
 ## Leakage
 
