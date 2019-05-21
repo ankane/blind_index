@@ -154,7 +154,7 @@ class BlindIndexTest < Minitest::Test
     assert_equal "Size must be between 1 and 32", error.message
   end
 
-  def text_backfill
+  def test_backfill
     create_user
     User.update_all(encrypted_email_bidx: nil)
     user = User.last
