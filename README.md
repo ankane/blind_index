@@ -266,6 +266,14 @@ Be sure to include the `inspect` at the end, or it won’t be encoded properly i
 
 ## Reference
 
+Set default options in an initializer with:
+
+```ruby
+BlindIndex.default_options = {
+  algorithm: :argon2
+}
+```
+
 By default, blind indexes are encoded in Base64. Set a different encoding with:
 
 ```ruby
