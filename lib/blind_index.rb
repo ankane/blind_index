@@ -11,16 +11,16 @@ module BlindIndex
   class << self
     attr_accessor :default_options
   end
-  self.default_options = {
-    iterations: 10000,
-    algorithm: :pbkdf2_sha256,
-    insecure_key: false,
-    encode: true,
-    cost: {}
-  }
+  self.default_options = {}
 
   def self.generate_bidx(value, key:, **options)
-    options = default_options.merge(options)
+    options = {
+      iterations: 10000,
+      algorithm: :pbkdf2_sha256,
+      insecure_key: false,
+      encode: true,
+      cost: {}
+    }.merge(default_options).merge(options)
 
     # apply expression
     value = options[:expression].call(value) if options[:expression]
