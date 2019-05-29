@@ -42,7 +42,7 @@ add_index :users, :encrypted_email_bidx
 Next, generate a key
 
 ```ruby
-SecureRandom.hex(32)
+BlindIndex.generate_key
 ```
 
 Store the key with your other secrets. This is typically Rails credentials or an environment variable ([dotenv](https://github.com/bkeepers/dotenv) is great for this). Be sure to use different keys in development and production, and be sure this is different than the key you use for encryption. Keys don’t need to be hex-encoded, but it’s often easier to store them this way.
@@ -57,11 +57,9 @@ Add to your model
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, key: [ENV["EMAIL_BLIND_INDEX_KEY"]].pack("H*")
+  blind_index :email, key: ENV["EMAIL_BLIND_INDEX_KEY"]
 end
 ```
-
-> `pack` is used to decode the hex value
 
 Backfill existing records
 
@@ -224,8 +222,8 @@ And add to your model
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, key: [ENV["EMAIL_BLIND_INDEX_KEY"]].pack("H*")
-  blind_index :email_v2, attribute: :email, key: [ENV["EMAIL_V2_BLIND_INDEX_KEY"]].pack("H*")
+  blind_index :email, key: ENV["EMAIL_BLIND_INDEX_KEY"]
+  blind_index :email_v2, attribute: :email, key: ENV["EMAIL_V2_BLIND_INDEX_KEY"]
 end
 ```
 
@@ -242,7 +240,7 @@ Then update your model
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, bidx_attribute: :encrypted_email_v2_bidx, key: [ENV["EMAIL_V2_BLIND_INDEX_KEY"]].pack("H*")
+  blind_index :email, bidx_attribute: :encrypted_email_v2_bidx, key: ENV["EMAIL_V2_BLIND_INDEX_KEY"]
 
   # remove this line after dropping column
   self.ignored_columns = ["encrypted_email_bidx"]

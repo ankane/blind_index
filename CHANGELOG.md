@@ -1,4 +1,4 @@
-## 0.3.5 [unreleased]
+## 0.3.5
 
 - Added support for hex keys
 - Added `generate_key` method
