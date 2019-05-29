@@ -35,10 +35,10 @@ class User < ActiveRecord::Base
   attr_encrypted :first_name, key: SecureRandom.random_bytes(32)
   attr_encrypted :last_name, key: SecureRandom.random_bytes(32)
 
-  blind_index :email, key: SecureRandom.random_bytes(32)
-  blind_index :email_ci, algorithm: :scrypt, key: SecureRandom.random_bytes(32), attribute: :email, expression: ->(v) { v.try(:downcase) }
-  blind_index :email_binary, algorithm: :argon2, key: SecureRandom.random_bytes(32), attribute: :email, encode: false
-  blind_index :initials, key: SecureRandom.hex(32), size: 16
+  blind_index :email, key: BlindIndex.generate_key
+  blind_index :email_ci, algorithm: :scrypt, key: BlindIndex.generate_key, attribute: :email, expression: ->(v) { v.try(:downcase) }
+  blind_index :email_binary, algorithm: :argon2, key: BlindIndex.generate_key, attribute: :email, encode: false
+  blind_index :initials, key: SecureRandom.random_bytes(32), size: 16
 
   validates :email, uniqueness: true
   validates :email_ci, uniqueness: true
@@ -54,5 +54,5 @@ class User < ActiveRecord::Base
 end
 
 class ActiveUser < User
-  blind_index :child, key: SecureRandom.random_bytes(32)
+  blind_index :child, key: BlindIndex.generate_key
 end

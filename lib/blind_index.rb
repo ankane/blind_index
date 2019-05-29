@@ -95,6 +95,11 @@ module BlindIndex
       end
     end
   end
+
+  def self.generate_key
+    require "securerandom"
+    SecureRandom.hex(32)
+  end
 end
 
 ActiveSupport.on_load(:active_record) do

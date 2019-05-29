@@ -1,6 +1,7 @@
 ## 0.3.5 [unreleased]
 
 - Added support for hex keys
+- Added `generate_key` method
 - Fixed querying with array values
 
 ## 0.3.4
