@@ -98,7 +98,7 @@ module BlindIndex
 
   def self.generate_key
     require "securerandom"
-    # force encoding to make consistent for JRuby
+    # force encoding to make JRuby consistent with MRI
     SecureRandom.hex(32).force_encoding(Encoding::US_ASCII)
   end
 end
