@@ -1,3 +1,7 @@
+## 0.3.6 [unreleased]
+
+- Fixed `generate_key` for JRuby
+
 ## 0.3.5
 
 - Added support for hex keys
