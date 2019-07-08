@@ -60,7 +60,7 @@ class BlindIndexTest < Minitest::Test
   def test_encode
     user = create_user
     assert User.find_by(email_binary: "test@example.org")
-    assert_equal 32, user.encrypted_email_binary_bidx.bytesize
+    assert_equal 32, user.email_binary_bidx.bytesize
   end
 
   def test_validation
@@ -79,14 +79,14 @@ class BlindIndexTest < Minitest::Test
 
   def test_nil
     user = create_user(email: nil)
-    assert_nil user.encrypted_email_bidx
+    assert_nil user.email_bidx
     assert User.where(email: nil).first
     assert_nil User.where(email: "").first
   end
 
   def test_empty_string
     user = create_user(email: "")
-    assert user.encrypted_email_bidx
+    assert user.email_bidx
     assert User.where(email: "").first
     assert_nil User.where(email: nil).first
   end
@@ -95,13 +95,14 @@ class BlindIndexTest < Minitest::Test
     user = create_user
     user.email = nil
     user.save!
-    assert_nil user.encrypted_email_bidx
+    assert_nil user.email_bidx
     assert User.where(email: nil).first
   end
 
   def test_class_method
     user = create_user
-    assert_equal user.encrypted_email_bidx, User.compute_email_bidx("test@example.org")
+    assert_equal user.email_bidx, User.generate_email_bidx("test@example.org")
+    assert_equal user.email_bidx, User.compute_email_bidx("test@example.org")
   end
 
   def test_secure_key
@@ -111,13 +112,6 @@ class BlindIndexTest < Minitest::Test
     assert_equal "Key must use binary encoding", error.message
   end
 
-  # def test_secure_key_ascii
-  #   error = assert_raises(BlindIndex::Error) do
-  #     BlindIndex.generate_bidx("test@example.org", key: ("0"*32).encode("BINARY"))
-  #   end
-  #   assert_equal "Key must not be ASCII", error.message
-  # end
-
   def test_secure_key_length
     error = assert_raises(BlindIndex::Error) do
       BlindIndex.generate_bidx("test@example.org", key: SecureRandom.random_bytes(20))
@@ -126,14 +120,12 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_inheritance
-    assert_equal %i[email email_ci email_binary initials], User.blind_indexes.keys
-    assert_equal %i[email email_ci email_binary initials child], ActiveUser.blind_indexes.keys
+    assert_equal %i[email email_ci email_binary initials phone], User.blind_indexes.keys
+    assert_equal %i[email email_ci email_binary initials phone child], ActiveUser.blind_indexes.keys
   end
 
   def test_initials
-    skip unless ActiveRecord::VERSION::MAJOR >= 5
-
-    user = create_user(first_name: "Test", last_name: "User")
+    create_user(first_name: "Test", last_name: "User")
     assert User.find_by(initials: "TU")
 
     user = User.last
@@ -156,11 +148,27 @@ class BlindIndexTest < Minitest::Test
 
   def test_backfill
     create_user
-    User.update_all(encrypted_email_bidx: nil)
+    User.update_all(email_bidx: nil)
     user = User.last
-    assert_nil user.encrypted_email_bidx
+    assert_nil user.email_bidx
     user.compute_email_bidx
-    assert user.encrypted_email_bidx
+    assert user.email_bidx
+  end
+
+  def test_index_key
+    index_key = BlindIndex.index_key(table: "users", bidx_attribute: "email_bidx", master_key: "0"*64)
+    assert_equal "289737bab72fa97b1f4b081cef00d7b7d75034bcf3183c363feaf3e6441777bc", index_key
+  end
+
+  def test_default_algorithm
+    create_user
+    expected = BlindIndex.generate_bidx("test@example.org", algorithm: :argon2id, key: User.blind_indexes[:email][:key])
+    assert_equal expected, User.last.email_bidx
+  end
+
+  def test_lockbox
+    create_user(phone: "555-555-5555")
+    assert User.find_by(phone: "555-555-5555")
   end
 
   private

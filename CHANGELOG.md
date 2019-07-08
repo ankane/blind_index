@@ -1,6 +1,15 @@
-## 0.3.6 [unreleased]
+## 1.0.0 [unreleased]
 
+- Added support for master key
+- Added support for Argon2id
 - Fixed `generate_key` for JRuby
+- Dropped support for Rails 4.2
+
+Breaking changes
+
+- Made Argon2id the default algorithm
+- Removed `encrypted_` prefix from columns
+- Changed default encoding to Base64 strict
 
 ## 0.3.5
 

@@ -2,7 +2,7 @@
 
 Securely search encrypted database fields
 
-Designed for use with [attr_encrypted](https://github.com/attr-encrypted/attr_encrypted)
+Works with [Lockbox](https://github.com/ankane/lockbox) and [attr_encrypted](https://github.com/attr-encrypted/attr_encrypted)
 
 Here’s a [full example](https://ankane.org/securing-user-emails-in-rails) of how to use it
 
@@ -28,45 +28,67 @@ Add this line to your application’s Gemfile:
 gem 'blind_index'
 ```
 
-## Getting Started
-
-> Note: Your model should already be set up with attr_encrypted. The examples are for a `User` model with `attr_encrypted :email`. See the [full example](https://ankane.org/securing-user-emails-in-rails) if needed.
-
-Create a migration to add a column for the blind index
+On Windows, also add:
 
 ```ruby
-add_column :users, :encrypted_email_bidx, :string
-add_index :users, :encrypted_email_bidx
+gem 'argon2', git: 'https://github.com/technion/ruby-argon2.git', submodules: true
 ```
 
-Next, generate a key
+Until `argon2 >= 2.0.1` is released.
+
+## Getting Started
+
+> Note: Your model should already be set up with Lockbox or attr_encrypted. The examples are for a `User` model with `encrypts :email` or `attr_encrypted :email`. See the [full example](https://ankane.org/securing-user-emails-in-rails) if needed.
+
+First, generate a key
 
 ```ruby
 BlindIndex.generate_key
 ```
 
-Store the key with your other secrets. This is typically Rails credentials or an environment variable ([dotenv](https://github.com/bkeepers/dotenv) is great for this). Be sure to use different keys in development and production, and be sure this is different than the key you use for encryption. Keys don’t need to be hex-encoded, but it’s often easier to store them this way.
+Store the key with your other secrets. This is typically Rails credentials or an environment variable ([dotenv](https://github.com/bkeepers/dotenv) is great for this). Be sure to use different keys in development and production. Keys don’t need to be hex-encoded, but it’s often easier to store them this way.
 
-Here’s a key you can use in development
+Set the following environment variable with your key (you can use this one in development)
 
 ```sh
-EMAIL_BLIND_INDEX_KEY=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+BLIND_INDEX_MASTER_KEY=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+```
+
+or create `config/initializers/blind_index.rb` with something like
+
+```ruby
+BlindIndex.master_key = Rails.application.credentials.blind_index_master_key
+```
+
+Create a migration to add a column for the blind index
+
+```ruby
+add_column :users, :email_bidx, :string
+add_index :users, :email_bidx # unique: true if needed
 ```
 
 Add to your model
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, key: ENV["EMAIL_BLIND_INDEX_KEY"]
+  blind_index :email
+end
+```
+
+For more sensitive fields, use
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, slow: true
 end
 ```
 
 Backfill existing records
 
 ```ruby
-User.find_each do |user|
+User.unscoped.where(email_bidx: nil).find_each do |user|
   user.compute_email_bidx
-  user.save!
+  user.save(validate: false)
 end
 ```
 
@@ -94,7 +116,7 @@ You can apply expressions to attributes before indexing and searching. This give
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, expression: ->(v) { v.downcase } ...
+  blind_index :email, expression: ->(v) { v.downcase }
 end
 ```
 
@@ -103,25 +125,25 @@ end
 You may want multiple blind indexes for an attribute. To do this, add another column:
 
 ```ruby
-add_column :users, :encrypted_email_ci_bidx, :string
-add_index :users, :encrypted_email_ci_bidx
+add_column :users, :email_ci_bidx, :string
+add_index :users, :email_ci_bidx
 ```
 
 Update your model
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, ...
-  blind_index :email_ci, attribute: :email, expression: ->(v) { v.downcase } ...
+  blind_index :email
+  blind_index :email_ci, attribute: :email, expression: ->(v) { v.downcase }
 end
 ```
 
 Backfill existing records
 
 ```ruby
-User.find_each do |user|
+User.unscoped.where(email_ci_bidx: nil).find_each do |user|
   user.compute_email_ci_bidx
-  user.save!
+  user.save(validate: false)
 end
 ```
 
@@ -137,12 +159,10 @@ If you don’t need to store the original value (for instance, when just checkin
 
 ```ruby
 class User < ApplicationRecord
-  attribute :email
-  blind_index :email, ...
+  attribute :email, :string
+  blind_index :email
 end
 ```
-
-*Requires ActiveRecord 5.1+*
 
 ## Multiple Columns
 
@@ -150,12 +170,12 @@ You can also use virtual attributes to index data from multiple columns:
 
 ```ruby
 class User < ApplicationRecord
-  attribute :initials
+  attribute :initials, :string
 
   # must come before the blind_index method so it runs first
   before_validation :set_initials, if: -> { changes.key?(:first_name) || changes.key?(:last_name) }
 
-  blind_index :initials, ...
+  blind_index :initials
 
   def set_initials
     self.initials = "#{first_name[0]}#{last_name[0]}"
@@ -163,76 +183,29 @@ class User < ApplicationRecord
 end
 ```
 
-*Requires ActiveRecord 5.1+*
-
-## Algorithms
-
-### PBKDF2-SHA256
-
-The default hashing algorithm. [Key stretching](https://en.wikipedia.org/wiki/Key_stretching) increases the amount of time required to compute hashes, which slows down brute-force attacks.
-
-The default number of iterations is 10,000. For highly sensitive fields, set this to at least 100,000.
-
-```ruby
-class User < ApplicationRecord
-  blind_index :email, iterations: 100000, ...
-end
-```
-
-> Changing this requires you to recompute the blind index.
-
-### Argon2
-
-Argon2 is the state-of-the-art algorithm and recommended for best security.
-
-To use it, add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and set:
-
-```ruby
-class User < ApplicationRecord
-  blind_index :email, algorithm: :argon2, ...
-end
-```
-
-The default cost parameters are `{t: 3, m: 12}`. For highly sensitive fields, set this to at least `{t: 4, m: 15}`.
-
-```ruby
-class User < ApplicationRecord
-  blind_index :email, algorithm: :argon2, cost: {t: 4, m: 15}, ...
-end
-```
-
-> Changing this requires you to recompute the blind index.
-
-The variant used is Argon2i.
-
-### Other
-
-scrypt is [also supported](docs/scrypt.md). Unless you have specific reasons to use it, go with Argon2 instead.
-
 ## Key Rotation
 
 To rotate keys without downtime, add a new column:
 
 ```ruby
-add_column :users, :encrypted_email_v2_bidx, :string
-add_index :users, :encrypted_email_v2_bidx
+add_column :users, :email_bidx_v2, :string
+add_index :users, :email_bidx_v2
 ```
 
 And add to your model
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, key: ENV["EMAIL_BLIND_INDEX_KEY"]
-  blind_index :email_v2, attribute: :email, key: ENV["EMAIL_V2_BLIND_INDEX_KEY"]
+  blind_index :email, rotate: {version: 2, master_key: ENV["BLIND_INDEX_MASTER_KEY_V2"]}
 end
 ```
 
-Backfill the data
+This will keep the new column synced going forward. Next, backfill the data:
 
 ```ruby
-User.find_each do |user|
-  user.compute_email_v2_bidx
-  user.save!
+User.unscoped.where(email_bidx_v2: nil).find_each do |user|
+  user.compute_rotated_email_bidx
+  user.save(validate: false)
 end
 ```
 
@@ -240,34 +213,51 @@ Then update your model
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, bidx_attribute: :encrypted_email_v2_bidx, key: ENV["EMAIL_V2_BLIND_INDEX_KEY"]
-
-  # remove this line after dropping column
-  self.ignored_columns = ["encrypted_email_bidx"]
+  blind_index :email, version: 2, master_key: ENV["BLIND_INDEX_MASTER_KEY_V2"]
 end
 ```
 
 Finally, drop the old column.
 
+## Key Separation
+
+The master key is used to generate unique keys for each blind index. This technique comes from [CipherSweet](https://ciphersweet.paragonie.com/internals/key-hierarchy). The table name and blind index column name are both used in this process. If you need to rename a table with blind indexes, or a blind index column itself, get the key:
+
+```ruby
+BlindIndex.index_key(table: "users", bidx_attribute: "email_bidx")
+```
+
+And set it directly before renaming:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, key: ENV["USER_EMAIL_BLIND_INDEX_KEY"]
+end
+```
+
+## Algorithm
+
+Argon2id is used for best security. The default cost parameters are 3 iterations and 4 MB of memory. For `slow: true`, the cost parameters are 4 iterations and 32 MB of memory.
+
+A number of other algorithms are [also supported](docs/Other-Algorithms.md). Unless you have specific reasons to use them, go with Argon2id.
+
 ## Fixtures
 
-You can use encrypted attributes and blind indexes in fixtures with:
+You can use blind indexes in fixtures with:
 
 ```yml
 test_user:
-  encrypted_email: <%= User.encrypt_email("test@example.org", iv: Base64.decode64("0000000000000000")) %>
-  encrypted_email_iv: "0000000000000000"
-  encrypted_email_bidx: <%= User.compute_email_bidx("test@example.org").inspect %>
+  email_bidx: <%= User.generate_email_bidx("test@example.org").inspect %>
 ```
 
-Be sure to include the `inspect` at the end, or it won’t be encoded properly in YAML.
+Be sure to include the `inspect` at the end or it won’t be encoded properly in YAML.
 
 ## Reference
 
 Set default options in an initializer with:
 
 ```ruby
-BlindIndex.default_options[:algorithm] = :argon2
+BlindIndex.default_options = {algorithm: :pbkdf2_sha256}
 ```
 
 By default, blind indexes are encoded in Base64. Set a different encoding with:
@@ -286,11 +276,83 @@ class User < ApplicationRecord
 end
 ```
 
+Set a key directly for an index with:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, key: ENV["USER_EMAIL_BLIND_INDEX_KEY"]
+end
+```
+
 ## Alternatives
 
 One alternative to blind indexing is to use a deterministic encryption scheme, like [AES-SIV](https://github.com/miscreant/miscreant). In this approach, the encrypted data will be the same for matches.
 
 ## Upgrading
+
+### 1.0.0
+
+1.0.0 brings a number of improvements. Here are a few to be aware of:
+
+- Argon2id is the default algorithm for stronger security
+- You can use a master key instead of individual keys for each column
+- Columns no longer have an `encrypted_` prefix
+
+For existing fields, add:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, legacy: true
+end
+```
+
+#### Optional
+
+To rotate to new fields that use Argon2id and a master key, generate a master key:
+
+```ruby
+BlindIndex.generate_key
+```
+
+And set `ENV["BLIND_INDEX_MASTER_KEY"]` or `BlindIndex.master_key`.
+
+Add a new column without the `encrypted_` prefix:
+
+```ruby
+add_column :users, :email_bidx, :string
+add_index :users, :email_bidx # unique: true if needed
+```
+
+And add to your model
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, key: ENV["USER_EMAIL_BLIND_INDEX_KEY"], legacy: true, rotate: true
+end
+```
+
+> For more sensitive fields, use `rotate: {slow: true}`
+
+This will keep the new column synced going forward. Next, backfill the data:
+
+```ruby
+User.unscoped.where(email_bidx: nil).find_each do |user|
+  user.compute_rotated_email_bidx
+  user.save(validate: false)
+end
+```
+
+Then update your model
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email
+end
+```
+
+> For more sensitive fields, add `slow: true`
+
+Finally, drop the old column.
 
 ### 0.3.0
 
@@ -306,16 +368,16 @@ Update your model to convert the hex key to binary.
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, key: [ENV["EMAIL_BLIND_INDEX_KEY"]].pack("H*")
+  blind_index :email, key: [ENV["USER_EMAIL_BLIND_INDEX_KEY"]].pack("H*")
 end
 ```
 
 And recompute the blind index.
 
 ```ruby
-User.find_each do |user|
+User.unscoped.find_each do |user|
   user.compute_email_bidx
-  user.save!
+  user.save(validate: false)
 end
 ```
 
@@ -323,7 +385,7 @@ To continue without rotating, set:
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, insecure_key: true, ...
+  blind_index :email, insecure_key: true
 end
 ```
 

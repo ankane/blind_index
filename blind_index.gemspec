@@ -1,7 +1,4 @@
-
-lib = File.expand_path("../lib", __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "blind_index/version"
+require_relative "lib/blind_index/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "blind_index"
@@ -16,17 +13,18 @@ Gem::Specification.new do |spec|
   spec.files         = Dir["*.{md,txt}", "{lib}/**/*"]
   spec.require_path  = "lib"
 
-  spec.required_ruby_version = ">= 2.2"
+  spec.required_ruby_version = ">= 2.4"
 
-  spec.add_dependency "activesupport", ">= 4.2"
+  spec.add_dependency "activesupport", ">= 5"
+  spec.add_dependency "argon2", ">= 2"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "minitest"
   spec.add_development_dependency "attr_encrypted"
   spec.add_development_dependency "activerecord"
-  spec.add_development_dependency "sqlite3", "~> 1.3.0"
+  spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "scrypt"
-  spec.add_development_dependency "argon2"
   spec.add_development_dependency "benchmark-ips"
+  spec.add_development_dependency "lockbox", ">= 0.2"
 end

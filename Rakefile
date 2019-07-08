@@ -12,18 +12,20 @@ task default: :test
 
 namespace :benchmark do
   task :algorithms do
-    require "securerandom"
     require "benchmark/ips"
     require "blind_index"
     require "scrypt"
     require "argon2"
 
-    key = SecureRandom.random_bytes(32)
+    key = BlindIndex.generate_key
     value = "secret"
 
     Benchmark.ips do |x|
       x.report("pbkdf2_sha256") { BlindIndex.generate_bidx(value, key: key, algorithm: :pbkdf2_sha256) }
-      x.report("argon2") { BlindIndex.generate_bidx(value, key: key, algorithm: :argon2) }
+      x.report("pbkdf2_sha256 slow") { BlindIndex.generate_bidx(value, key: key, algorithm: :pbkdf2_sha256, slow: true) }
+      x.report("argon2id") { BlindIndex.generate_bidx(value, key: key, algorithm: :argon2id) }
+      x.report("argon2id slow") { BlindIndex.generate_bidx(value, key: key, algorithm: :argon2id, slow: true) }
+      # x.report("argon2i") { BlindIndex.generate_bidx(value, key: key, algorithm: :argon2i) }
       # x.report("scrypt") { BlindIndex.generate_bidx(value, key: key, algorithm: :scrypt) }
     end
   end
