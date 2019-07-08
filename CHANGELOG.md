@@ -1,4 +1,4 @@
-## 1.0.0 [unreleased]
+## 1.0.0
 
 - Added support for master key
 - Added support for Argon2id
