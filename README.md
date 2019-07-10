@@ -2,11 +2,9 @@
 
 Securely search encrypted database fields
 
-Works with [Lockbox](https://github.com/ankane/lockbox) and [attr_encrypted](https://github.com/attr-encrypted/attr_encrypted)
+Works with [Lockbox](https://github.com/ankane/lockbox) ([full example](https://ankane.org/securing-user-emails-lockbox)) and [attr_encrypted](https://github.com/attr-encrypted/attr_encrypted) ([full example](https://ankane.org/securing-user-emails-in-rails))
 
-Here’s a [full example](https://ankane.org/securing-user-emails-in-rails) of how to use it
-
-Check out [this post](https://ankane.org/sensitive-data-rails) for more info on securing sensitive data with Rails
+Learn more about [securing sensitive data in Rails](https://ankane.org/sensitive-data-rails)
 
 [![Build Status](https://travis-ci.org/ankane/blind_index.svg?branch=master)](https://travis-ci.org/ankane/blind_index)
 
@@ -38,7 +36,7 @@ Until `argon2 >= 2.0.1` is released.
 
 ## Getting Started
 
-> Note: Your model should already be set up with Lockbox or attr_encrypted. The examples are for a `User` model with `encrypts :email` or `attr_encrypted :email`. See the [full example](https://ankane.org/securing-user-emails-in-rails) if needed.
+> Note: Your model should already be set up with Lockbox or attr_encrypted. The examples are for a `User` model with `encrypts :email` or `attr_encrypted :email`. See the full examples for [Lockbox](https://ankane.org/securing-user-emails-lockbox) and [attr_encrypted](https://ankane.org/securing-user-emails-in-rails) if needed.
 
 First, generate a key
 
