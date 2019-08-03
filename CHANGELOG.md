@@ -1,3 +1,7 @@
+## 1.0.1 [unreleased]
+
+- Added support for Mongoid
+
 ## 1.0.0
 
 - Added support for master key
