@@ -11,6 +11,9 @@ matrix:
     - gemfile: test/gemfiles/mongoid7.gemfile
       services:
         - mongodb
+    - gemfile: test/gemfiles/mongoid6.gemfile
+      services:
+        - mongodb
 script: bundle exec rake test
 notifications:
   email:
