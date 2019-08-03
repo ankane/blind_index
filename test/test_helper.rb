@@ -1,16 +1,22 @@
 require "bundler/setup"
 
 begin
+  require "active_record"
+rescue LoadError
+end
+
+begin
   require "mongoid"
 rescue LoadError
 end
 
-Bundler.require(:default)
+Bundler.require(:default, :development)
 require "minitest/autorun"
 require "minitest/pride"
-require "scrypt"
 
 BlindIndex.master_key = BlindIndex.generate_key
+
+Lockbox.master_key = Lockbox.generate_key
 
 $logger = ActiveSupport::Logger.new(ENV["VERBOSE"] ? STDOUT : nil)
 

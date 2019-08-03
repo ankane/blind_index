@@ -1,8 +1,5 @@
 require "active_record"
 require "attr_encrypted"
-require "lockbox"
-
-Lockbox.master_key = Lockbox.generate_key
 
 ActiveRecord::Base.logger = $logger
 

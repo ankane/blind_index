@@ -74,7 +74,7 @@ module BlindIndex
           end
 
           if callback
-            before_validation method_name, if: -> { changes.key?(attribute.to_s) }
+            before_validation method_name, if: -> { send("#{attribute}_changed?") }
           end
 
           # use include so user can override
