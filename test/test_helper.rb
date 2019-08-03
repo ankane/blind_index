@@ -1,4 +1,10 @@
 require "bundler/setup"
+
+begin
+  require "mongoid"
+rescue LoadError
+end
+
 Bundler.require(:default)
 require "minitest/autorun"
 require "minitest/pride"

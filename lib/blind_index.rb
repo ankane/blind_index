@@ -149,3 +149,8 @@ end
 # TODO find better ActiveModel hook
 require "active_model/callbacks"
 ActiveModel::Callbacks.include(BlindIndex::Model)
+
+if defined?(Mongoid)
+  require "blind_index/mongoid"
+  Mongoid::Criteria.prepend(BlindIndex::Mongoid::Criteria)
+end
