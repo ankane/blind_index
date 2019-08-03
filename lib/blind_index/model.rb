@@ -74,7 +74,7 @@ module BlindIndex
           end
 
           if callback
-            if respond_to?(:table_name)
+            if defined?(ActiveRecord) && self < ActiveRecord::Base
               # Active Record
               # prevent deprecation warnings
               before_validation method_name, if: -> { changes.key?(attribute.to_s) }
