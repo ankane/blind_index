@@ -31,7 +31,8 @@ class BlindIndexTest < Minitest::Test
   def test_where_array
     create_user
     create_user(email: "test2@example.org")
-    assert_equal 2, User.where(email: ["test@example.org", "test2@example.org"]).count
+    key = mongoid? ? :email.in : :email
+    assert_equal 2, User.where(key => ["test@example.org", "test2@example.org"]).count
   end
 
   def test_where_string_key
