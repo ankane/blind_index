@@ -6,9 +6,25 @@ module BlindIndex
       def expr_query(criterion)
         if has_blind_indexes? && criterion.is_a?(Hash)
           criterion.keys.each do |key|
-            if (bi = klass.blind_indexes[key.to_sym])
+            key_sym = (key.is_a?(::Mongoid::Criteria::Queryable::Key) ? key.name : key).to_sym
+
+            if (bi = klass.blind_indexes[key_sym])
               value = criterion.delete(key)
-              criterion[bi[:bidx_attribute]] =
+
+              bidx_key =
+                if key.is_a?(::Mongoid::Criteria::Queryable::Key)
+                  ::Mongoid::Criteria::Queryable::Key.new(
+                    bi[:bidx_attribute],
+                    key.strategy,
+                    key.operator,
+                    key.expanded,
+                    &key.block
+                  )
+                else
+                  bi[:bidx_attribute]
+                end
+
+              criterion[bidx_key] =
                 if value.is_a?(Array)
                   value.map { |v| BlindIndex.generate_bidx(v, bi) }
                 else
