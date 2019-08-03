@@ -74,7 +74,15 @@ module BlindIndex
           end
 
           if callback
-            before_validation method_name, if: -> { send("#{attribute}_changed?") }
+            if respond_to?(:table_name)
+              # Active Record
+              # prevent deprecation warnings
+              before_validation method_name, if: -> { changes.key?(attribute.to_s) }
+            else
+              # Mongoid
+              # Lockbox only supports attribute_changed?
+              before_validation method_name, if: -> { send("#{attribute}_changed?") }
+            end
           end
 
           # use include so user can override
