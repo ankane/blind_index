@@ -1,6 +1,3 @@
-require "active_record"
-require "attr_encrypted"
-
 ActiveRecord::Base.logger = $logger
 
 ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
