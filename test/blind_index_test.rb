@@ -84,7 +84,8 @@ class BlindIndexTest < Minitest::Test
     create_user
     user = User.new(email: "TEST@example.org")
     assert !user.valid?
-    assert_equal "Email ci has already been taken", user.errors.full_messages.first
+    expected = mongoid? ? "Email ci is already taken" : "Email ci has already been taken"
+    assert_equal expected, user.errors.full_messages.first
   end
 
   def test_nil

@@ -153,4 +153,5 @@ ActiveModel::Callbacks.include(BlindIndex::Model)
 if defined?(Mongoid)
   require "blind_index/mongoid"
   Mongoid::Criteria.prepend(BlindIndex::Mongoid::Criteria)
+  Mongoid::Validatable::UniquenessValidator.prepend(BlindIndex::Mongoid::UniquenessValidator)
 end

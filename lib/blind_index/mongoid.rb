@@ -45,5 +45,15 @@ module BlindIndex
         @has_blind_indexes
       end
     end
+
+    module UniquenessValidator
+      def create_criteria(base, document, attribute, value)
+        if base.respond_to?(:blind_indexes) && (bi = base.blind_indexes[attribute])
+          value = BlindIndex.generate_bidx(value, bi)
+          attribute = bi[:bidx_attribute]
+        end
+        super(base, document, attribute, value)
+      end
+    end
   end
 end
