@@ -4,7 +4,7 @@ module BlindIndex
       private
 
       def expr_query(criterion)
-        if has_blind_indexes? && criterion.is_a?(Hash)
+        if criterion.is_a?(Hash) && klass.respond_to?(:blind_indexes)
           criterion.keys.each do |key|
             key_sym = (key.is_a?(::Mongoid::Criteria::Queryable::Key) ? key.name : key).to_sym
 
@@ -35,14 +35,6 @@ module BlindIndex
         end
 
         super(criterion)
-      end
-
-      # memoize for performance
-      def has_blind_indexes?
-        unless defined?(@has_blind_indexes)
-          @has_blind_indexes = klass.respond_to?(:blind_indexes)
-        end
-        @has_blind_indexes
       end
     end
 
