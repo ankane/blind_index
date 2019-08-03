@@ -33,7 +33,7 @@ module BlindIndex
         class_method_name = :"generate_#{name}_bidx"
 
         key = options[:key]
-        key ||= -> { BlindIndex.index_key(table: table_name, bidx_attribute: bidx_attribute, master_key: options[:master_key], encode: false) }
+        key ||= -> { BlindIndex.index_key(table: try(:table_name) || collection_name.to_s, bidx_attribute: bidx_attribute, master_key: options[:master_key], encode: false) }
 
         class_eval do
           @blind_indexes ||= {}

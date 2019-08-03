@@ -145,3 +145,7 @@ ActiveSupport.on_load(:active_record) do
     ActiveRecord::Validations::UniquenessValidator.prepend(BlindIndex::Extensions::UniquenessValidator)
   end
 end
+
+# TODO find better ActiveModel hook
+require "active_model/callbacks"
+ActiveModel::Callbacks.include(BlindIndex::Model)
