@@ -32,7 +32,7 @@ On Windows, also add:
 gem 'argon2', git: 'https://github.com/technion/ruby-argon2.git', submodules: true
 ```
 
-Until `argon2 >= 2.0.1` is released.
+Until `argon2 > 2.0.2` is released.
 
 ## Getting Started
 
