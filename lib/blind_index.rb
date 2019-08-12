@@ -146,12 +146,9 @@ ActiveSupport.on_load(:active_record) do
   end
 end
 
-# TODO find better ActiveModel hook
-require "active_model/callbacks"
-ActiveModel::Callbacks.include(BlindIndex::Model)
-
-if defined?(Mongoid)
+ActiveSupport.on_load(:mongoid) do
   require "blind_index/mongoid"
+  Mongoid::Document::ClassMethods.include(BlindIndex::Model)
   Mongoid::Criteria.prepend(BlindIndex::Mongoid::Criteria)
   Mongoid::Validatable::UniquenessValidator.prepend(BlindIndex::Mongoid::UniquenessValidator)
 end
