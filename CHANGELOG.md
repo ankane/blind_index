@@ -1,4 +1,4 @@
-## 1.0.1 [unreleased]
+## 1.0.1
 
 - Added support for Mongoid
 

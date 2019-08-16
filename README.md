@@ -250,7 +250,7 @@ test_user:
 
 Be sure to include the `inspect` at the end or it won’t be encoded properly in YAML.
 
-## Mongoid [master]
+## Mongoid
 
 For Mongoid, use:
 
