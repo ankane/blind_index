@@ -33,7 +33,7 @@ module BlindIndex
         class_method_name = :"generate_#{name}_bidx"
 
         key = options[:key]
-        key ||= -> { BlindIndex.index_key(table: table_name, bidx_attribute: bidx_attribute, master_key: options[:master_key], encode: false) }
+        key ||= -> { BlindIndex.index_key(table: try(:table_name) || collection_name.to_s, bidx_attribute: bidx_attribute, master_key: options[:master_key], encode: false) }
 
         class_eval do
           @blind_indexes ||= {}
@@ -74,7 +74,15 @@ module BlindIndex
           end
 
           if callback
-            before_validation method_name, if: -> { changes.key?(attribute.to_s) }
+            if defined?(ActiveRecord) && self < ActiveRecord::Base
+              # Active Record
+              # prevent deprecation warnings
+              before_validation method_name, if: -> { changes.key?(attribute.to_s) }
+            else
+              # Mongoid
+              # Lockbox only supports attribute_changed?
+              before_validation method_name, if: -> { send("#{attribute}_changed?") }
+            end
           end
 
           # use include so user can override

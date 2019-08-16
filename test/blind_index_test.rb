@@ -16,6 +16,8 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_dynamic_finders
+    skip if mongoid?
+
     user = create_user
     assert User.find_by_email("test@example.org")
     assert User.find_by_id_and_email(user.id, "test@example.org")
@@ -29,7 +31,8 @@ class BlindIndexTest < Minitest::Test
   def test_where_array
     create_user
     create_user(email: "test2@example.org")
-    assert_equal 2, User.where(email: ["test@example.org", "test2@example.org"]).count
+    key = mongoid? ? :email.in : :email
+    assert_equal 2, User.where(key => ["test@example.org", "test2@example.org"]).count
   end
 
   def test_where_string_key
@@ -38,11 +41,15 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_where_not
+    skip if mongoid?
+
     create_user
     assert User.where.not(email: "test2@example.org").first
   end
 
   def test_where_not_empty
+    skip if mongoid?
+
     create_user
     assert_nil User.where.not(email: "test@example.org").first
   end
@@ -58,6 +65,8 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_encode
+    skip if mongoid?
+
     user = create_user
     assert User.find_by(email_binary: "test@example.org")
     assert_equal 32, user.email_binary_bidx.bytesize
@@ -67,14 +76,16 @@ class BlindIndexTest < Minitest::Test
     create_user
     user = User.new(email: "test@example.org")
     assert !user.valid?
-    assert_equal "Email has already been taken", user.errors.full_messages.first
+    expected = mongoid? ? "Email is already taken" : "Email has already been taken"
+    assert_equal expected, user.errors.full_messages.first
   end
 
   def test_validation_case_insensitive
     create_user
     user = User.new(email: "TEST@example.org")
     assert !user.valid?
-    assert_equal "Email ci has already been taken", user.errors.full_messages.first
+    expected = mongoid? ? "Email ci is already taken" : "Email ci has already been taken"
+    assert_equal expected, user.errors.full_messages.first
   end
 
   def test_nil
@@ -179,5 +190,9 @@ class BlindIndexTest < Minitest::Test
 
   def create_user(email: "test@example.org", **attributes)
     User.create!({email: email}.merge(attributes))
+  end
+
+  def mongoid?
+    defined?(Mongoid)
   end
 end

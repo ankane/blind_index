@@ -145,3 +145,13 @@ ActiveSupport.on_load(:active_record) do
     ActiveRecord::Validations::UniquenessValidator.prepend(BlindIndex::Extensions::UniquenessValidator)
   end
 end
+
+if defined?(Mongoid)
+  # TODO find better ActiveModel hook
+  require "active_model/callbacks"
+  ActiveModel::Callbacks.include(BlindIndex::Model)
+
+  require "blind_index/mongoid"
+  Mongoid::Criteria.prepend(BlindIndex::Mongoid::Criteria)
+  Mongoid::Validatable::UniquenessValidator.prepend(BlindIndex::Mongoid::UniquenessValidator)
+end

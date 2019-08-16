@@ -6,6 +6,14 @@ gemfile:
   - test/gemfiles/activerecord52.gemfile
   - test/gemfiles/activerecord51.gemfile
   - test/gemfiles/activerecord50.gemfile
+matrix:
+  include:
+    - gemfile: test/gemfiles/mongoid7.gemfile
+      services:
+        - mongodb
+    - gemfile: test/gemfiles/mongoid6.gemfile
+      services:
+        - mongodb
 script: bundle exec rake test
 notifications:
   email:

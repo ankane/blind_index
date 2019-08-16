@@ -250,6 +250,16 @@ test_user:
 
 Be sure to include the `inspect` at the end or it won’t be encoded properly in YAML.
 
+## Mongoid [master]
+
+For Mongoid, use:
+
+```ruby
+class User
+  field :email_bidx, type: String
+end
+```
+
 ## Reference
 
 Set default options in an initializer with:
