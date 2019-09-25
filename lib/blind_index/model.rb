@@ -2,6 +2,7 @@ module BlindIndex
   module Model
     def blind_index(*attributes, rotate: false, migrating: false, **opts)
       indexes = attributes.map { |a| [a, opts.dup] }
+      rotate = {} if rotate == true
       indexes.concat(attributes.map { |a| [a, rotate.merge(rotate: true)] }) if rotate
 
       indexes.each do |name, options|

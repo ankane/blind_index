@@ -335,7 +335,7 @@ And add to your model
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, key: ENV["USER_EMAIL_BLIND_INDEX_KEY"], legacy: true, rotate: true
+  blind_index :email, key: ENV["USER_EMAIL_BLIND_INDEX_KEY"], legacy: true, rotate: {}
 end
 ```
 
