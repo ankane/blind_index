@@ -1,7 +1,3 @@
-## 1.0.2 [unreleased]
-
-- Fixed error with `rotate: true`
-
 ## 1.0.1
 
 - Added support for Mongoid
