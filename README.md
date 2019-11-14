@@ -416,5 +416,5 @@ To get started with development and testing:
 git clone https://github.com/ankane/blind_index.git
 cd blind_index
 bundle install
-rake test
+bundle exec rake test
 ```
