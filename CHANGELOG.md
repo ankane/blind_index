@@ -1,6 +1,6 @@
 ## 1.0.2 (unreleased)
 
-- Fixed `OpenSSL::KDF` check on some systems
+- Fixed `OpenSSL::KDF` error on some platforms
 
 ## 1.0.1 (2019-08-16)
 
