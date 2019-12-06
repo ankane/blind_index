@@ -1,3 +1,7 @@
+## 1.0.2 (unreleased)
+
+- Fixed `OpenSSL::KDF` check on some systems
+
 ## 1.0.1 (2019-08-16)
 
 - Added support for Mongoid
