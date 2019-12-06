@@ -22,7 +22,7 @@ module BlindIndex
     end
 
     def hkdf(ikm, salt:, info:, length:, hash:)
-      if OpenSSL::KDF.respond_to?(:hkdf)
+      if defined?(OpenSSL::KDF.hkdf)
         return OpenSSL::KDF.hkdf(ikm, salt: salt, info: info, length: length, hash: hash)
       end
 
