@@ -16,7 +16,10 @@ We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-en
 
 An important consideration in searchable encryption is leakage, which is information an attacker can gain. Blind indexing leaks that rows have the same value. If you use this for a field like last name, an attacker can use frequency analysis to predict the values. In an active attack where an attacker can control the input values, they can learn which other values in the database match.
 
-Here’s a [great article](https://blog.cryptographyengineering.com/2019/02/11/attack-of-the-week-searchable-encryption-and-the-ever-expanding-leakage-function/) on leakage in searchable encryption. Blind indexing has the same leakage as deterministic encryption.
+Here’s a [great article](https://blog.cryptographyengineering.com/2019/02/11/attack-of-the-week-searchable-encryption-and-the-ever-expanding-leakage-function/) on leakage in searchable encryption. Blind indexing has the same leakage as deterministic encryption. We recommend blind indexing over deterministic encryption because:
+
+1. You can keep encryption consistent for all fields (both searchable and non-searchable)
+2. Blind indexing supports expressions
 
 ## Installation
 
