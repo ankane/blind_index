@@ -90,14 +90,14 @@ module BlindIndex
         end
       end
     end
-  end
 
-  module InstanceMethods
-    def read_attribute_for_validation(key)
-      if (bi = self.class.blind_indexes[key])
-        send(bi[:attribute])
-      else
-        super
+    module InstanceMethods
+      def read_attribute_for_validation(key)
+        if (bi = self.class.blind_indexes[key])
+          send(bi[:attribute])
+        else
+          super
+        end
       end
     end
   end
