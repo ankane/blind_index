@@ -37,22 +37,17 @@ namespace :benchmark do
 
     ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 
-    ActiveRecord::Migration.create_table :users do
-    end
-
-    ActiveRecord::Migration.create_table :cities do
+    ActiveRecord::Migration.create_table :users do |t|
+      t.string :email_bidx
     end
 
     class User < ActiveRecord::Base
-      blind_index :email
-    end
-
-    class City < ActiveRecord::Base
+      blind_index :email, key: BlindIndex.generate_key, slow: true
     end
 
     Benchmark.ips do |x|
-      x.report("no index") { City.where(id: 1).first }
-      x.report("index") { User.where(id: 1).first }
+      x.report("no index") { User.find_by(id: 1) }
+      x.report("index") { User.find_by(email: "test@example.org") }
     end
   end
 end
