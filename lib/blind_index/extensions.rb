@@ -10,9 +10,9 @@ module BlindIndex
               value = new_hash.delete(key)
               new_hash[bi[:bidx_attribute]] =
                 if value.is_a?(Array)
-                  value.map { |v| BlindIndex.generate_bidx(v, bi) }
+                  value.map { |v| BlindIndex.generate_bidx(v, **bi) }
                 else
-                  BlindIndex.generate_bidx(value, bi)
+                  BlindIndex.generate_bidx(value, **bi)
                 end
             end
           end
@@ -64,7 +64,7 @@ module BlindIndex
       if ActiveRecord::VERSION::STRING >= "5.2"
         def build_relation(klass, attribute, value)
           if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
-            value = BlindIndex.generate_bidx(value, bi)
+            value = BlindIndex.generate_bidx(value, **bi)
             attribute = bi[:bidx_attribute]
           end
           super(klass, attribute, value)
@@ -72,7 +72,7 @@ module BlindIndex
       else
         def build_relation(klass, table, attribute, value)
           if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
-            value = BlindIndex.generate_bidx(value, bi)
+            value = BlindIndex.generate_bidx(value, **bi)
             attribute = bi[:bidx_attribute]
           end
           super(klass, table, attribute, value)

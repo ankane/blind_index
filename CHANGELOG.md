@@ -1,6 +1,7 @@
 ## 1.0.2 (unreleased)
 
 - Fixed `OpenSSL::KDF` error on some platforms
+- Fixed deprecation warnings in Ruby 2.7
 
 ## 1.0.1 (2019-08-16)
 

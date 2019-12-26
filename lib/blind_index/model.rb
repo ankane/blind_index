@@ -61,7 +61,7 @@ module BlindIndex
           )
 
           define_singleton_method class_method_name do |value|
-            BlindIndex.generate_bidx(value, blind_indexes[name])
+            BlindIndex.generate_bidx(value, **blind_indexes[name])
           end
 
           define_singleton_method method_name do |value|
