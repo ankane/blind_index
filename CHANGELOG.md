@@ -1,4 +1,4 @@
-## 1.0.2 (unreleased)
+## 1.0.2 (2019-12-26)
 
 - Fixed `OpenSSL::KDF` error on some platforms
 - Fixed deprecation warnings in Ruby 2.7
