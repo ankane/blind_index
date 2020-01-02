@@ -15,6 +15,11 @@ class BlindIndexTest < Minitest::Test
     assert User.find_by({"email" => "test@example.org"})
   end
 
+  def test_find_or_create_by
+    user = create_user
+    assert_equal user, User.find_or_create_by(email: "test@example.org")
+  end
+
   def test_delete_by
     skip unless activerecord6?
 
