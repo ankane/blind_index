@@ -230,6 +230,6 @@ class BlindIndexTest < Minitest::Test
   end
 
   def activerecord6?
-    defined?(ActiveRecord) && ActiveRecord::VERSION::MAJOR >= 6
+    !mongoid? && ActiveRecord::VERSION::MAJOR >= 6
   end
 end
