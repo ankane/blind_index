@@ -15,6 +15,22 @@ class BlindIndexTest < Minitest::Test
     assert User.find_by({"email" => "test@example.org"})
   end
 
+  def test_delete_by
+    skip unless activerecord6?
+
+    create_user
+    assert_equal 1, User.delete_by(email: "test@example.org")
+    assert_equal 0, User.count
+  end
+
+  def test_destroy_by
+    skip unless activerecord6?
+
+    user = create_user
+    assert_equal [user], User.destroy_by(email: "test@example.org")
+    assert_equal 0, User.count
+  end
+
   def test_dynamic_finders
     skip if mongoid?
 
@@ -206,5 +222,9 @@ class BlindIndexTest < Minitest::Test
 
   def mongoid?
     defined?(Mongoid)
+  end
+
+  def activerecord6?
+    defined?(ActiveRecord) && ActiveRecord::VERSION::MAJOR >= 6
   end
 end
