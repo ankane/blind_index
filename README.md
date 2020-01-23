@@ -181,6 +181,27 @@ class User < ApplicationRecord
 end
 ```
 
+## Migrating Data
+
+If you’re encrypting a column and adding a blind index at the same time, use the `migrating` option.
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, migrating: true
+end
+```
+
+This allows you to backfill records while still querying the unencrypted field.
+
+```ruby
+User.unscoped.where(email_bidx: nil).find_each do |user|
+  user.compute_migrated_email_bidx
+  user.save(validate: false)
+end
+```
+
+Once that completes, you can remove the `migrating` option.
+
 ## Key Rotation
 
 To rotate keys without downtime, add a new column:
