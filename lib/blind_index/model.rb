@@ -74,15 +74,15 @@ module BlindIndex
           end
 
           if callback
-            if defined?(ActiveRecord) && self < ActiveRecord::Base
-              # Active Record
-              # prevent deprecation warnings
-              before_validation method_name, if: -> { changes.key?(attribute.to_s) }
-            else
-              # Mongoid
-              # Lockbox only supports attribute_changed?
-              before_validation method_name, if: -> { send("#{attribute}_changed?") }
+            # TODO reuse module
+            m = Module.new do
+              define_method "#{attribute}=" do |value|
+                result = super(value)
+                send(method_name)
+                result
+              end
             end
+            prepend m
           end
 
           # use include so user can override
