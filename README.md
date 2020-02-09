@@ -36,27 +36,9 @@ Until `argon2 > 2.0.2` is released.
 
 ## Getting Started
 
-> Note: Your model should already be set up with Lockbox or attr_encrypted. The examples are for a `User` model with `encrypts :email` or `attr_encrypted :email`. See the full examples for [Lockbox](https://ankane.org/securing-user-emails-lockbox) and [attr_encrypted](https://ankane.org/securing-user-emails-in-rails) if needed.
+Your model should already be set up with Lockbox or attr_encrypted. The examples are for a `User` model with `encrypts :email` or `attr_encrypted :email`. See the full examples for [Lockbox](https://ankane.org/securing-user-emails-lockbox) and [attr_encrypted](https://ankane.org/securing-user-emails-in-rails) if needed.
 
-First, generate a key
-
-```ruby
-BlindIndex.generate_key
-```
-
-Store the key with your other secrets. This is typically Rails credentials or an environment variable ([dotenv](https://github.com/bkeepers/dotenv) is great for this). Be sure to use different keys in development and production. Keys don’t need to be hex-encoded, but it’s often easier to store them this way.
-
-Set the following environment variable with your key (you can use this one in development)
-
-```sh
-BLIND_INDEX_MASTER_KEY=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-```
-
-or create `config/initializers/blind_index.rb` with something like
-
-```ruby
-BlindIndex.master_key = Rails.application.credentials.blind_index_master_key
-```
+If you use attr_encrypted, [generate a key](#key-generation-attr_encrypted-only) before continuing. For Lockbox, your Lockbox master key is used by default.
 
 Create a migration to add a column for the blind index
 
@@ -279,6 +261,28 @@ For Mongoid, use:
 class User
   field :email_bidx, type: String
 end
+```
+
+## Key Generation (attr_encrypted only)
+
+Generate a key
+
+```ruby
+BlindIndex.generate_key
+```
+
+Store the key with your other secrets. This is typically Rails credentials or an environment variable ([dotenv](https://github.com/bkeepers/dotenv) is great for this). Be sure to use different keys in development and production. Keys don’t need to be hex-encoded, but it’s often easier to store them this way.
+
+Set the following environment variable with your key (you can use this one in development)
+
+```sh
+BLIND_INDEX_MASTER_KEY=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+```
+
+or create `config/initializers/blind_index.rb` with something like
+
+```ruby
+BlindIndex.master_key = Rails.application.credentials.blind_index_master_key
 ```
 
 ## Reference
