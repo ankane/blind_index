@@ -27,9 +27,6 @@ else
 end
 
 class User
-  # must come before blind_index
-  before_validation :set_initials, if: -> { changes.key?(:first_name) || changes.key?(:last_name) }
-
   blind_index :email
   blind_index :email_ci, algorithm: :scrypt, attribute: :email, expression: ->(v) { v.try(:downcase) }
   blind_index :email_binary, algorithm: :argon2, key: BlindIndex.generate_key, attribute: :email, encode: defined?(Mongoid) # can't get binary working with Mongoid
@@ -38,6 +35,8 @@ class User
 
   validates :email, uniqueness: true
   validates :email_ci, uniqueness: true
+
+  before_validation :set_initials, if: -> { changes.key?(:first_name) || changes.key?(:last_name) }
 
   def set_initials
     self.initials = [first_name.first, last_name.first].join
