@@ -133,12 +133,7 @@ ActiveSupport.on_load(:active_record) do
   require "blind_index/extensions"
   extend BlindIndex::Model
 
-  if defined?(ActiveRecord::TableMetadata)
-    ActiveRecord::TableMetadata.prepend(BlindIndex::Extensions::TableMetadata)
-  else
-    ActiveRecord::PredicateBuilder.singleton_class.prepend(BlindIndex::Extensions::PredicateBuilder)
-  end
-
+  ActiveRecord::TableMetadata.prepend(BlindIndex::Extensions::TableMetadata)
   ActiveRecord::DynamicMatchers::Method.prepend(BlindIndex::Extensions::DynamicMatchers)
 
   unless ActiveRecord::VERSION::STRING.start_with?("5.1.")

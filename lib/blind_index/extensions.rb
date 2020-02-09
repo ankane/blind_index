@@ -1,6 +1,5 @@
 module BlindIndex
   module Extensions
-    # ActiveRecord 5.0+
     module TableMetadata
       def resolve_column_aliases(hash)
         new_hash = super
@@ -26,37 +25,6 @@ module BlindIndex
           @has_blind_indexes = klass.respond_to?(:blind_indexes)
         end
         @has_blind_indexes
-      end
-    end
-
-    # ActiveRecord 4.2
-    module PredicateBuilder
-      def resolve_column_aliases(klass, hash)
-        new_hash = super
-        if has_blind_indexes?(klass)
-          hash.each do |key, _|
-            if key.respond_to?(:to_sym) && (bi = klass.blind_indexes[key.to_sym]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
-              value = new_hash.delete(key)
-              new_hash[bi[:bidx_attribute]] =
-                if value.is_a?(Array)
-                  value.map { |v| BlindIndex.generate_bidx(v, bi) }
-                else
-                  BlindIndex.generate_bidx(value, bi)
-                end
-            end
-          end
-        end
-        new_hash
-      end
-
-      @@blind_index_cache = {}
-
-      # memoize for performance
-      def has_blind_indexes?(klass)
-        if @@blind_index_cache[klass].nil?
-          @@blind_index_cache[klass] = klass.respond_to?(:blind_indexes)
-        end
-        @@blind_index_cache[klass]
       end
     end
 
