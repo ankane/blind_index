@@ -18,7 +18,7 @@ module BlindIndex
   self.default_options = {}
 
   def self.master_key
-    @master_key ||= ENV["BLIND_INDEX_MASTER_KEY"]
+    @master_key ||= ENV["BLIND_INDEX_MASTER_KEY"] || (defined?(Lockbox.master_key) && Lockbox.master_key)
   end
 
   def self.generate_bidx(value, key:, **options)
