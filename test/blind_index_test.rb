@@ -134,7 +134,6 @@ class BlindIndexTest < Minitest::Test
   def test_class_method
     user = create_user
     assert_equal user.email_bidx, User.generate_email_bidx("test@example.org")
-    assert_equal user.email_bidx, User.compute_email_bidx("test@example.org")
   end
 
   def test_secure_key

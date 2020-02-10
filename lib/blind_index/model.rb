@@ -64,11 +64,6 @@ module BlindIndex
             BlindIndex.generate_bidx(value, **blind_indexes[name])
           end
 
-          define_singleton_method method_name do |value|
-            ActiveSupport::Deprecation.warn("Use #{class_method_name} instead")
-            send(class_method_name, value)
-          end
-
           define_method method_name do
             self.send("#{bidx_attribute}=", self.class.send(class_method_name, send(attribute)))
           end
