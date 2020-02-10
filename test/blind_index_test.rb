@@ -204,6 +204,8 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_lockbox_reset
+    skip if mongoid?
+
     user = User.new
     user.phone = "555-555-5555"
     assert user.phone
