@@ -169,11 +169,9 @@ You can also use virtual attributes to index data from multiple columns:
 ```ruby
 class User < ApplicationRecord
   attribute :initials, :string
-
-  # must come before the blind_index method so it runs first
-  before_validation :set_initials, if: -> { changes.key?(:first_name) || changes.key?(:last_name) }
-
   blind_index :initials
+
+  before_validation :set_initials, if: -> { changes.key?(:first_name) || changes.key?(:last_name) }
 
   def set_initials
     self.initials = "#{first_name[0]}#{last_name[0]}"

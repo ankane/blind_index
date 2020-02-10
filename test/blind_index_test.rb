@@ -215,6 +215,25 @@ class BlindIndexTest < Minitest::Test
     end
   end
 
+  def test_set
+    user = User.new
+    user.email = "test@example.org"
+    assert_equal User.generate_email_bidx("test@example.org"), user.email_bidx
+  end
+
+  def test_update_attribute
+    user = create_user
+    user.update_attribute(:email, "new@example.org")
+    assert_equal User.generate_email_bidx("new@example.org"), user.email_bidx
+  end
+
+  def test_validate_false
+    user = User.new
+    user.email = "test@example.org"
+    user.save(validate: false)
+    assert_equal User.generate_email_bidx("test@example.org"), user.email_bidx
+  end
+
   private
 
   def random_key
