@@ -65,7 +65,7 @@ module BlindIndex
           end
 
           define_method method_name do
-            self.send("#{bidx_attribute}=", self.class.send(class_method_name, send(attribute)))
+            send("#{bidx_attribute}=", self.class.send(class_method_name, send(attribute)))
           end
 
           if callback
