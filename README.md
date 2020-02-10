@@ -26,19 +26,13 @@ Add this line to your application’s Gemfile:
 gem 'blind_index'
 ```
 
-On Windows, also add:
-
-```ruby
-gem 'argon2', git: 'https://github.com/technion/ruby-argon2.git', submodules: true
-```
-
-Until `argon2 > 2.0.2` is released.
-
 ## Getting Started
 
 Your model should already be set up with Lockbox or attr_encrypted. The examples are for a `User` model with `encrypts :email` or `attr_encrypted :email`. See the full examples for [Lockbox](https://ankane.org/securing-user-emails-lockbox) and [attr_encrypted](https://ankane.org/securing-user-emails-in-rails) if needed.
 
-If you use attr_encrypted, [generate a key](#key-generation-attr_encrypted-only) before continuing. For Lockbox, your Lockbox master key is used by default.
+Also, if you use attr_encrypted, [generate a key](#key-generation).
+
+---
 
 Create a migration to add a column for the blind index
 
@@ -261,9 +255,11 @@ class User
 end
 ```
 
-## Key Generation (attr_encrypted only)
+## Key Generation
 
-Generate a key
+This is optional for Lockbox, as its master key is used by default.
+
+Generate a key with:
 
 ```ruby
 BlindIndex.generate_key

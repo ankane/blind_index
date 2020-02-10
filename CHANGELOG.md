@@ -1,10 +1,7 @@
 ## 2.0.0 (unreleased)
 
-- Better Lockbox integration - no need to generate a separate key
-
-Breaking changes
-
 - Blind indexes are updated immediately instead of in a `before_validation` callback
+- Better Lockbox integration - no need to generate a separate key
 - The `argon2` gem has been replaced with `argon2-kdf` for less dependencies and Windows support
 
 ## 1.0.2 (2019-12-26)
