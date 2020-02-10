@@ -203,6 +203,18 @@ class BlindIndexTest < Minitest::Test
     assert User.find_by(phone: "555-555-5555")
   end
 
+  def test_lockbox_reset
+    user = User.new
+    user.phone = "555-555-5555"
+    assert user.phone
+    assert user.phone_ciphertext
+    assert user.phone_bidx
+    user.restore_phone!
+    assert_nil user.phone
+    assert_nil user.phone_ciphertext
+    assert_nil user.phone_bidx
+  end
+
   def test_bad_master_key
     previous_value = BlindIndex.master_key
     begin
