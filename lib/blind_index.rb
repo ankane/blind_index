@@ -1,7 +1,7 @@
 # dependencies
 require "active_support"
 require "openssl"
-require "argon2"
+require "argon2/kdf"
 
 # modules
 require "blind_index/key_generator"
@@ -64,7 +64,7 @@ module BlindIndex
           # use same bounds as rbnacl
           raise BlindIndex::Error, "m must be between 3 and 22" if m < 3 || m > 22
 
-          [Argon2::Engine.hash_argon2id(value, key, t, m, size)].pack("H*")
+          Argon2::KDF.argon2id(value, salt: key, t: t, m: m, p: 1, length: size)
         when :pbkdf2_sha256
           iterations = cost_options[:iterations] || options[:iterations] || (options[:slow] ? 100000 : 10000)
           OpenSSL::PKCS5.pbkdf2_hmac(value, key, iterations, size, "sha256")
@@ -78,7 +78,7 @@ module BlindIndex
           # use same bounds as rbnacl
           raise BlindIndex::Error, "m must be between 3 and 22" if m < 3 || m > 22
 
-          [Argon2::Engine.hash_argon2i(value, key, t, m, size)].pack("H*")
+          Argon2::KDF.argon2i(value, salt: key, t: t, m: m, p: 1, length: size)
         when :scrypt
           n = cost_options[:n] || 4096
           r = cost_options[:r] || 8
