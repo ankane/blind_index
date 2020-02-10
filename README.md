@@ -324,6 +324,14 @@ One alternative to blind indexing is to use a deterministic encryption scheme, l
 
 ## Upgrading
 
+### 2.0.0
+
+2.0.0 brings a number of improvements.
+
+- Blind indexes are updated immediately instead of in a `before_validation` callback
+- Better Lockbox integration - no need to generate a separate key
+- There’s a new gem for Argon2 that has no dependencies and (officially) supports Windows
+
 ### 1.0.0
 
 1.0.0 brings a number of improvements. Here are a few to be aware of:
