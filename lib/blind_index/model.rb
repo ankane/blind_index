@@ -69,12 +69,22 @@ module BlindIndex
           end
 
           if callback
+            activerecord = defined?(ActiveRecord) && self < ActiveRecord::Base
+
             # TODO reuse module
             m = Module.new do
               define_method "#{attribute}=" do |value|
                 result = super(value)
                 send(method_name)
                 result
+              end
+
+              unless activerecord
+                define_method "reset_#{attribute}!" do
+                  result = super()
+                  send(method_name)
+                  result
+                end
               end
             end
             prepend m

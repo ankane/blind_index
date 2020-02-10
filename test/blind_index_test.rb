@@ -203,14 +203,16 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_lockbox_restore
-    skip if mongoid?
-
     user = User.new
     user.phone = "555-555-5555"
     assert user.phone
     assert user.phone_ciphertext
     assert user.phone_bidx
-    user.restore_phone!
+    if mongoid?
+      user.reset_phone!
+    else
+      user.restore_phone!
+    end
     assert_nil user.phone
     assert_nil user.phone_ciphertext
     assert_nil user.phone_bidx
