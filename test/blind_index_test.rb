@@ -177,15 +177,6 @@ class BlindIndexTest < Minitest::Test
     assert_equal "Size must be between 1 and 32", error.message
   end
 
-  def test_backfill
-    create_user
-    User.update_all(email_bidx: nil)
-    user = User.last
-    assert_nil user.email_bidx
-    user.compute_email_bidx
-    assert user.email_bidx
-  end
-
   def test_index_key
     index_key = BlindIndex.index_key(table: "users", bidx_attribute: "email_bidx", master_key: "0"*64)
     assert_equal "289737bab72fa97b1f4b081cef00d7b7d75034bcf3183c363feaf3e6441777bc", index_key
@@ -265,6 +256,15 @@ class BlindIndexTest < Minitest::Test
       BlindIndex.backfill(User, columns: [:bad])
     end
     assert_equal "Bad column: bad", error.message
+  end
+
+  def test_manual_backfill
+    create_user
+    User.update_all(email_bidx: nil)
+    user = User.last
+    assert_nil user.email_bidx
+    user.compute_email_bidx
+    assert user.email_bidx
   end
 
   private
