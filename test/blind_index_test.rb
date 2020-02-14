@@ -251,6 +251,19 @@ class BlindIndexTest < Minitest::Test
     assert_equal 1, User.where(email: "test9@example.org").count
   end
 
+  def test_backfill_relation
+    10.times do |i|
+      User.create!(email: "test#{i}@example.org")
+    end
+    last_id = User.last.id
+    User.update_all(email_bidx: nil)
+
+    assert_equal 0, User.where(email: "test9@example.org").count
+    BlindIndex.backfill(User.where(id: last_id))
+    assert_equal 0, User.where(email: "test8@example.org").count
+    assert_equal 1, User.where(email: "test9@example.org").count
+  end
+
   def test_backfill_bad_column
     error = assert_raises(ArgumentError) do
       BlindIndex.backfill(User, columns: [:bad])
