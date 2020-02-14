@@ -1,27 +1,38 @@
 module BlindIndex
   class Backfill
+    attr_reader :blind_indexes
+
     def initialize(relation, batch_size:)
       @relation = relation
       @transaction = @relation.respond_to?(:transaction)
       @batch_size = batch_size
+      @blind_indexes = @relation.blind_indexes
     end
 
     def perform(columns:)
-      blind_indexes = @relation.blind_indexes
+      filter_columns(columns) if columns
 
-      # filter columns
-      if columns
-        columns = columns.map(&:to_s)
-        blind_indexes.select! { |_, v| columns.include?(v[:bidx_attribute]) }
-        bad_columns = columns - blind_indexes.map { |_, v| v[:bidx_attribute] }
-        raise ArgumentError, "Bad column: #{bad_columns.first}" if bad_columns.any?
+      relation = build_relation(blind_indexes)
+      each_batch(relation) do |records|
+        backfill_records(records)
       end
+    end
 
+    private
+
+    def filter_columns(columns)
+      columns = columns.map(&:to_s)
+      # modify in-place
+      blind_indexes.select! { |_, v| columns.include?(v[:bidx_attribute]) }
+      bad_columns = columns - blind_indexes.map { |_, v| v[:bidx_attribute] }
+      raise ArgumentError, "Bad column: #{bad_columns.first}" if bad_columns.any?
+    end
+
+    def build_relation(blind_indexes)
       # build relation
       base_relation = @relation
 
-      # remove true condition in 0.4.0
-      if true || (defined?(ActiveRecord::Base) && base_relation.is_a?(ActiveRecord::Base))
+      if defined?(ActiveRecord::Base) && base_relation.is_a?(ActiveRecord::Base)
         base_relation = base_relation.unscoped
       end
 
@@ -41,19 +52,10 @@ module BlindIndex
         # TODO add where conditions for Mongoid
       end
 
-      # query
-      if relation.respond_to?(:find_in_batches)
-        relation.find_in_batches(batch_size: @batch_size) do |records|
-          backfill_records(records, blind_indexes: blind_indexes)
-        end
-      else
-        each_batch(relation, batch_size: @batch_size) do |records|
-          backfill_records(records, blind_indexes: blind_indexes)
-        end
-      end
+      relation
     end
 
-    def backfill_records(records, blind_indexes:)
+    def backfill_records(records)
       # do expensive blind index computation outside of transaction
       records.each do |record|
         blind_indexes.each do |k, v|
@@ -78,18 +80,24 @@ module BlindIndex
       end
     end
 
-    def each_batch(scope, batch_size:)
-      # https://github.com/karmi/tire/blob/master/lib/tire/model/import.rb
-      # use cursor for Mongoid
-      items = []
-      scope.all.each do |item|
-        items << item
-        if items.length == batch_size
-          yield items
-          items = []
+    def each_batch(relation)
+      if relation.respond_to?(:find_in_batches)
+        relation.find_in_batches(batch_size: @batch_size) do |records|
+          yield records
         end
+      else
+        # https://github.com/karmi/tire/blob/master/lib/tire/model/import.rb
+        # use cursor for Mongoid
+        items = []
+        relation.all.each do |item|
+          items << item
+          if items.length == @batch_size
+            yield items
+            items = []
+          end
+        end
+        yield items if items.any?
       end
-      yield items if items.any?
     end
   end
 end
