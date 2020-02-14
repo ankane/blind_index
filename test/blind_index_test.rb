@@ -255,9 +255,9 @@ class BlindIndexTest < Minitest::Test
     end
     User.update_all(email_bidx: nil)
 
-    assert_nil User.find_by(email: "test9@example.org")
+    assert_equal 0, User.where(email: "test9@example.org").count
     BlindIndex.backfill(User, columns: [:email_bidx], batch_size: 5)
-    assert User.find_by(email: "test9@example.org")
+    assert_equal 1, User.where(email: "test9@example.org").count
   end
 
   def test_backfill_bad_column
