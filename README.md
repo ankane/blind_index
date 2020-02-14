@@ -60,10 +60,7 @@ end
 Backfill existing records
 
 ```ruby
-User.unscoped.where(email_bidx: nil).find_each do |user|
-  user.compute_email_bidx
-  user.save(validate: false)
-end
+BlindIndex.backfill(User)
 ```
 
 And query away
@@ -115,10 +112,7 @@ end
 Backfill existing records
 
 ```ruby
-User.unscoped.where(email_ci_bidx: nil).find_each do |user|
-  user.compute_email_ci_bidx
-  user.save(validate: false)
-end
+BlindIndex.backfill(User, columns: [:email_ci_bidx])
 ```
 
 And query away
@@ -168,10 +162,7 @@ end
 This allows you to backfill records while still querying the unencrypted field.
 
 ```ruby
-User.unscoped.where(email_bidx: nil).find_each do |user|
-  user.compute_migrated_email_bidx
-  user.save(validate: false)
-end
+BlindIndex.backfill(User)
 ```
 
 Once that completes, you can remove the `migrating` option.
@@ -196,10 +187,7 @@ end
 This will keep the new column synced going forward. Next, backfill the data:
 
 ```ruby
-User.unscoped.where(email_bidx_v2: nil).find_each do |user|
-  user.compute_rotated_email_bidx
-  user.save(validate: false)
-end
+BlindIndex.backfill(User, columns: [:email_bidx_v2])
 ```
 
 Then update your model

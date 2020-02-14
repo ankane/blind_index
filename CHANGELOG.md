@@ -1,4 +1,4 @@
-## 2.0.1 (unreleased)
+## 2.0.1 (2020-02-14)
 
 - Added `BlindIndex.backfill` method
 
