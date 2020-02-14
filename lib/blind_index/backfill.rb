@@ -34,10 +34,12 @@ module BlindIndex
         relation = relation.unscoped
       end
 
+      # convert from possible class to ActiveRecord::Relation or Mongoid::Criteria
+      relation = relation.all
+
       attributes = blind_indexes.map { |_, v| v[:bidx_attribute] }
 
-      # use all to convert to relation
-      if defined?(ActiveRecord::Relation) && relation.all.is_a?(ActiveRecord::Relation)
+      if defined?(ActiveRecord::Relation) && relation.is_a?(ActiveRecord::Relation)
         base_relation = relation.unscoped
         or_relation = relation.unscoped
 
