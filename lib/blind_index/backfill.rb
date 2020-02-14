@@ -87,7 +87,7 @@ module BlindIndex
 
       with_transaction do
         records.each do |record|
-          record.save(validate: false)
+          record.save!(validate: false)
         end
       end
     end
