@@ -2,18 +2,16 @@ module BlindIndex
   class Backfill
     attr_reader :blind_indexes
 
-    def initialize(relation, batch_size:)
+    def initialize(relation, batch_size:, columns:)
       @relation = relation
       @transaction = @relation.respond_to?(:transaction)
       @batch_size = batch_size
       @blind_indexes = @relation.blind_indexes
+      filter_columns(columns) if columns
     end
 
-    def perform(columns:)
-      filter_columns(columns) if columns
-
-      relation = build_relation(blind_indexes)
-      each_batch(relation) do |records|
+    def perform
+      each_batch do |records|
         backfill_records(records)
       end
     end
@@ -28,7 +26,7 @@ module BlindIndex
       raise ArgumentError, "Bad column: #{bad_columns.first}" if bad_columns.any?
     end
 
-    def build_relation(blind_indexes)
+    def build_relation
       # build relation
       base_relation = @relation
 
@@ -55,6 +53,28 @@ module BlindIndex
       relation
     end
 
+    def each_batch
+      relation = build_relation
+
+      if relation.respond_to?(:find_in_batches)
+        relation.find_in_batches(batch_size: @batch_size) do |records|
+          yield records
+        end
+      else
+        # https://github.com/karmi/tire/blob/master/lib/tire/model/import.rb
+        # use cursor for Mongoid
+        records = []
+        relation.all.each do |record|
+          records << record
+          if records.length == @batch_size
+            yield records
+            records = []
+          end
+        end
+        yield records if records.any?
+      end
+    end
+
     def backfill_records(records)
       # do expensive blind index computation outside of transaction
       records.each do |record|
@@ -66,7 +86,9 @@ module BlindIndex
       records.select! { |r| r.changed? }
 
       with_transaction do
-        records.map { |r| r.save(validate: false) }
+        records.each do |record|
+          record.save(validate: false)
+        end
       end
     end
 
@@ -77,26 +99,6 @@ module BlindIndex
         end
       else
         yield
-      end
-    end
-
-    def each_batch(relation)
-      if relation.respond_to?(:find_in_batches)
-        relation.find_in_batches(batch_size: @batch_size) do |records|
-          yield records
-        end
-      else
-        # https://github.com/karmi/tire/blob/master/lib/tire/model/import.rb
-        # use cursor for Mongoid
-        items = []
-        relation.all.each do |item|
-          items << item
-          if items.length == @batch_size
-            yield items
-            items = []
-          end
-        end
-        yield items if items.any?
       end
     end
   end

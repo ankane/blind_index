@@ -130,7 +130,7 @@ module BlindIndex
   end
 
   def self.backfill(relation, columns: nil, batch_size: 1000)
-    Backfill.new(relation, batch_size: batch_size).perform(columns: columns)
+    Backfill.new(relation, columns: columns, batch_size: batch_size).perform
   end
 end
 
