@@ -36,8 +36,9 @@ module BlindIndex
 
       relation = base_relation
 
+      attributes = blind_indexes.map { |_, v| v[:bidx_attribute] }
+
       if defined?(ActiveRecord::Relation) && base_relation.is_a?(ActiveRecord::Relation)
-        attributes = blind_indexes.map { |_, v| v[:bidx_attribute] }
         attributes.each_with_index do |attribute, i|
           relation =
             if i == 0
@@ -47,7 +48,7 @@ module BlindIndex
             end
         end
       else
-        # TODO add where conditions for Mongoid
+        relation = relation.or(attributes.map { |a| {a => nil} })
       end
 
       relation
