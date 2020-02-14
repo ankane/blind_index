@@ -7,7 +7,7 @@ module BlindIndex
       @transaction = @relation.respond_to?(:transaction)
       @batch_size = batch_size
       @blind_indexes = @relation.blind_indexes
-      filter_columns(columns) if columns
+      filter_columns!(columns) if columns
     end
 
     def perform
@@ -18,9 +18,9 @@ module BlindIndex
 
     private
 
-    def filter_columns(columns)
+    # modify in-place
+    def filter_columns!(columns)
       columns = columns.map(&:to_s)
-      # modify in-place
       blind_indexes.select! { |_, v| columns.include?(v[:bidx_attribute]) }
       bad_columns = columns - blind_indexes.map { |_, v| v[:bidx_attribute] }
       raise ArgumentError, "Bad column: #{bad_columns.first}" if bad_columns.any?
