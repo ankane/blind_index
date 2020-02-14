@@ -28,30 +28,32 @@ module BlindIndex
 
     def build_relation
       # build relation
-      base_relation = @relation
+      relation = @relation
 
-      if defined?(ActiveRecord::Base) && base_relation.is_a?(ActiveRecord::Base)
-        base_relation = base_relation.unscoped
+      if defined?(ActiveRecord::Base) && relation.is_a?(ActiveRecord::Base)
+        relation = relation.unscoped
       end
-
-      relation = base_relation
 
       attributes = blind_indexes.map { |_, v| v[:bidx_attribute] }
 
-      if defined?(ActiveRecord::Relation) && base_relation.is_a?(ActiveRecord::Relation)
+      # use all to convert to relation
+      if defined?(ActiveRecord::Relation) && relation.all.is_a?(ActiveRecord::Relation)
+        base_relation = relation.unscoped
+        or_relation = relation.unscoped
+
         attributes.each_with_index do |attribute, i|
-          relation =
+          or_relation =
             if i == 0
-              relation.where(attribute => nil)
+              base_relation.where(attribute => nil)
             else
-              relation.or(base_relation.where(attribute => nil))
+              or_relation.or(base_relation.where(attribute => nil))
             end
         end
-      else
-        relation = relation.or(attributes.map { |a| {a => nil} })
-      end
 
-      relation
+        relation.merge(or_relation)
+      else
+        relation.or(attributes.map { |a| {a => nil} })
+      end
     end
 
     def each_batch
