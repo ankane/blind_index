@@ -1,3 +1,7 @@
+## 2.0.1 (unreleased)
+
+- Added `BlindIndex.backfill` method
+
 ## 2.0.0 (2019-02-10)
 
 - Blind indexes are updated immediately instead of in a `before_validation` callback

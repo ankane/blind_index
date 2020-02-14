@@ -249,6 +249,24 @@ class BlindIndexTest < Minitest::Test
     assert_equal User.generate_email_bidx("test@example.org"), user.email_bidx
   end
 
+  def test_backfill
+    10.times do |i|
+      User.create!(email: "test#{i}@example.org")
+    end
+    User.update_all(email_bidx: nil)
+
+    assert_nil User.find_by(email: "test9@example.org")
+    BlindIndex.backfill(User, columns: [:email_bidx], batch_size: 5)
+    assert User.find_by(email: "test9@example.org")
+  end
+
+  def test_backfill_bad_column
+    error = assert_raises(ArgumentError) do
+      BlindIndex.backfill(User, columns: [:bad])
+    end
+    assert_equal "Bad column: bad", error.message
+  end
+
   private
 
   def random_key

@@ -4,6 +4,7 @@ require "openssl"
 require "argon2/kdf"
 
 # modules
+require "blind_index/backfill"
 require "blind_index/key_generator"
 require "blind_index/model"
 require "blind_index/version"
@@ -126,6 +127,10 @@ module BlindIndex
     raise BlindIndex::Error, "Key must be 32 bytes" if key.bytesize != 32
 
     key
+  end
+
+  def self.backfill(relation, columns: nil, batch_size: 1000)
+    Backfill.new(relation, batch_size: batch_size).perform(columns: columns)
   end
 end
 
