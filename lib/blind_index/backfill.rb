@@ -88,11 +88,14 @@ module BlindIndex
         end
       end
 
+      # don't need to save records that went from nil => nil
       records.select! { |r| r.changed? }
 
-      with_transaction do
-        records.each do |record|
-          record.save!(validate: false)
+      if records.any?
+        with_transaction do
+          records.each do |record|
+            record.save!(validate: false)
+          end
         end
       end
     end
