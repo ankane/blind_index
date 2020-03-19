@@ -1,17 +1,21 @@
 dist: bionic
 language: ruby
-rvm: 2.6
-gemfile:
-  - Gemfile
-  - test/gemfiles/activerecord52.gemfile
-  - test/gemfiles/activerecord51.gemfile
-  - test/gemfiles/activerecord50.gemfile
-matrix:
+jobs:
   include:
-    - gemfile: test/gemfiles/mongoid7.gemfile
+    - rvm: 2.7
+      gemfile: Gemfile
+    - rvm: 2.6
+      gemfile: test/gemfiles/activerecord52.gemfile
+    - rvm: 2.5
+      gemfile: test/gemfiles/activerecord51.gemfile
+    - rvm: 2.4
+      gemfile: test/gemfiles/activerecord50.gemfile
+    - rvm: 2.7
+      gemfile: test/gemfiles/mongoid7.gemfile
       services:
         - mongodb
-    - gemfile: test/gemfiles/mongoid6.gemfile
+    - rvm: 2.6
+      gemfile: test/gemfiles/mongoid6.gemfile
       services:
         - mongodb
 script: bundle exec rake test
