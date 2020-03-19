@@ -1,3 +1,7 @@
+## 2.0.2 (unreleased)
+
+- Fixed `backfill` method with relations for Mongoid
+
 ## 2.0.1 (2020-02-14)
 
 - Added `BlindIndex.backfill` method
