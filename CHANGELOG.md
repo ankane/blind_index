@@ -1,4 +1,4 @@
-## 2.0.2 (unreleased)
+## 2.0.2 (2020-06-01)
 
 - Improved error message for bad key length
 - Fixed `backfill` method with relations for Mongoid
