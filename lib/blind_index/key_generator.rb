@@ -11,7 +11,7 @@ module BlindIndex
       raise ArgumentError, "Missing field for key generation" if bidx_attribute.to_s.empty?
 
       c = "\x7E"*32
-      root_key = hkdf(BlindIndex.decode_key(@master_key), salt: table.to_s, info: "#{c}#{bidx_attribute}", length: 32, hash: "sha384")
+      root_key = hkdf(BlindIndex.decode_key(@master_key, name: "Master key"), salt: table.to_s, info: "#{c}#{bidx_attribute}", length: 32, hash: "sha384")
       hash_hmac("sha256", pack([table, bidx_attribute, bidx_attribute]), root_key)
     end
 

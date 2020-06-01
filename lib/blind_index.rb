@@ -117,14 +117,14 @@ module BlindIndex
     key
   end
 
-  def self.decode_key(key)
+  def self.decode_key(key, name: "Key")
     # decode hex key
     if key.encoding != Encoding::BINARY && key =~ /\A[0-9a-f]{64}\z/i
       key = [key].pack("H*")
     end
 
-    raise BlindIndex::Error, "Key must use binary encoding" if key.encoding != Encoding::BINARY
-    raise BlindIndex::Error, "Key must be 32 bytes" if key.bytesize != 32
+    raise BlindIndex::Error, "#{name} must be 32 bytes (64 hex digits)" if key.bytesize != 32
+    raise BlindIndex::Error, "#{name} must use binary encoding" if key.encoding != Encoding::BINARY
 
     key
   end

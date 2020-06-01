@@ -1,5 +1,6 @@
 ## 2.0.2 (unreleased)
 
+- Improved error message for bad key length
 - Fixed `backfill` method with relations for Mongoid
 
 ## 2.0.1 (2020-02-14)

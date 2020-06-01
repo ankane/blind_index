@@ -136,18 +136,36 @@ class BlindIndexTest < Minitest::Test
     assert_equal user.email_bidx, User.generate_email_bidx("test@example.org")
   end
 
-  def test_secure_key
+  def test_key_bad_length
     error = assert_raises(BlindIndex::Error) do
-      BlindIndex.generate_bidx("test@example.org", key: "bad")
+      BlindIndex.generate_bidx("test@example.org", key: SecureRandom.hex(31))
+    end
+    assert_equal "Key must be 32 bytes (64 hex digits)", error.message
+  end
+
+  def test_key_bad_encoding
+    error = assert_raises(BlindIndex::Error) do
+      BlindIndex.generate_bidx("test@example.org", key: SecureRandom.hex(16))
     end
     assert_equal "Key must use binary encoding", error.message
   end
 
-  def test_secure_key_length
-    error = assert_raises(BlindIndex::Error) do
-      BlindIndex.generate_bidx("test@example.org", key: SecureRandom.random_bytes(20))
+  def test_master_key_bad_length
+    with_master_key(SecureRandom.hex(31)) do
+      error = assert_raises(BlindIndex::Error) do
+        BlindIndex.index_key(table: "users", bidx_attribute: "test")
+      end
+      assert_equal "Master key must be 32 bytes (64 hex digits)", error.message
     end
-    assert_equal "Key must be 32 bytes", error.message
+  end
+
+  def test_master_key_bad_encoding
+    with_master_key(SecureRandom.hex(16)) do
+      error = assert_raises(BlindIndex::Error) do
+        BlindIndex.index_key(table: "users", bidx_attribute: "test")
+      end
+      assert_equal "Master key must use binary encoding", error.message
+    end
   end
 
   def test_inheritance
@@ -207,18 +225,6 @@ class BlindIndexTest < Minitest::Test
     assert_nil user.phone
     assert_nil user.phone_ciphertext
     assert_nil user.phone_bidx
-  end
-
-  def test_bad_master_key
-    previous_value = BlindIndex.master_key
-    begin
-      BlindIndex.master_key = "bad"
-      assert_raises(BlindIndex::Error) do
-        User.create!(email: "test@example.org")
-      end
-    ensure
-      BlindIndex.master_key = previous_value
-    end
   end
 
   def test_set
@@ -284,6 +290,16 @@ class BlindIndexTest < Minitest::Test
 
   def random_key
     SecureRandom.random_bytes(32)
+  end
+
+  def with_master_key(key)
+    previous_key = BlindIndex.master_key
+    begin
+      BlindIndex.master_key = key
+      yield
+    ensure
+      BlindIndex.master_key = previous_key
+    end
   end
 
   def create_user(email: "test@example.org", **attributes)
