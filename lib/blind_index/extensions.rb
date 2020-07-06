@@ -37,8 +37,8 @@ module BlindIndex
         super(record, attribute, value)
       end
 
+      # change attribute name here instead of validate_each for better error message
       if ActiveRecord::VERSION::STRING >= "5.2"
-        # change attribute name here instead of validate_each for better error message
         def build_relation(klass, attribute, value)
           if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
             attribute = bi[:bidx_attribute]
