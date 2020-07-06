@@ -5,8 +5,8 @@ ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 ActiveRecord::Migration.create_table :users do |t|
   t.string :encrypted_email
   t.string :encrypted_email_iv
-  t.string :email_bidx
-  t.string :email_ci_bidx
+  t.string :email_bidx, index: {unique: true}
+  t.string :email_ci_bidx, index: {unique: true}
   t.binary :email_binary_bidx
   t.string :encrypted_first_name
   t.string :encrypted_first_name_iv

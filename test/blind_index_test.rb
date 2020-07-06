@@ -109,6 +109,15 @@ class BlindIndexTest < Minitest::Test
     assert_equal expected, user.errors.full_messages.first
   end
 
+  def test_validation_allow_blank
+    User.create!(email: "")
+    user = User.new(email: "")
+    assert user.valid?
+    assert_raises do
+      user.save! # index prevents saving
+    end
+  end
+
   def test_nil
     user = create_user(email: nil)
     assert_nil user.email_bidx

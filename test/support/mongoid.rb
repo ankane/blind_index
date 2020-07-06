@@ -20,4 +20,9 @@ class User
   field :phone_bidx, type: String
 
   encrypts :email, :phone
+
+  index({email_bidx: 1}, {unique: true})
+  index({email_ci_bidx: 1}, {unique: true})
 end
+
+User.create_indexes

@@ -33,8 +33,8 @@ class User
   blind_index :initials, key: BlindIndex.generate_key, size: 16
   blind_index :phone
 
-  validates :email, uniqueness: true
-  validates :email_ci, uniqueness: true
+  validates :email, uniqueness: {allow_blank: true}
+  validates :email_ci, uniqueness: {allow_blank: true}
 
   before_validation :set_initials, if: -> { changes.key?(:first_name) || changes.key?(:last_name) }
 
