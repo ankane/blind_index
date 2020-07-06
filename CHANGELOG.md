@@ -12,7 +12,7 @@
 
 - Added `BlindIndex.backfill` method
 
-## 2.0.0 (2019-02-10)
+## 2.0.0 (2020-02-10)
 
 - Blind indexes are updated immediately instead of in a `before_validation` callback
 - Better Lockbox integration - no need to generate a separate key
