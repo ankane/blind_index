@@ -81,7 +81,7 @@ end
 
 ## Validations
 
-To prevent duplicates, use:
+You can use blind indexes for uniqueness validations.
 
 ```ruby
 class User < ApplicationRecord
@@ -89,7 +89,7 @@ class User < ApplicationRecord
 end
 ```
 
-We also recommend adding a unique index to the blind index column through a database migration.
+We recommend adding a unique index to the blind index column through a database migration.
 
 ```ruby
 add_index :users, :email_bidx, unique: true
