@@ -29,10 +29,18 @@ module BlindIndex
     end
 
     module UniquenessValidator
+      def validate_each(record, attribute, value)
+        klass = record.class
+        if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
+          value = record.read_attribute_for_validation(bi[:bidx_attribute])
+        end
+        super(record, attribute, value)
+      end
+
       if ActiveRecord::VERSION::STRING >= "5.2"
+        # change attribute name here instead of validate_each for better error message
         def build_relation(klass, attribute, value)
           if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
-            value = BlindIndex.generate_bidx(value, **bi)
             attribute = bi[:bidx_attribute]
           end
           super(klass, attribute, value)
@@ -40,7 +48,6 @@ module BlindIndex
       else
         def build_relation(klass, table, attribute, value)
           if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
-            value = BlindIndex.generate_bidx(value, **bi)
             attribute = bi[:bidx_attribute]
           end
           super(klass, table, attribute, value)

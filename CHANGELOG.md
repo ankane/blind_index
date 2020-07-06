@@ -1,3 +1,7 @@
+## 2.1.0 (unreleased)
+
+- Improved performance of uniqueness validations
+
 ## 2.0.2 (2020-06-01)
 
 - Improved error message for bad key length
