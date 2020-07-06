@@ -39,9 +39,17 @@ module BlindIndex
     end
 
     module UniquenessValidator
+      def validate_each(record, attribute, value)
+        klass = record.class
+        if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
+          value = record.read_attribute_for_validation(bi[:bidx_attribute])
+        end
+        super(record, attribute, value)
+      end
+
+      # change attribute name here instead of validate_each for better error message
       def create_criteria(base, document, attribute, value)
         if base.respond_to?(:blind_indexes) && (bi = base.blind_indexes[attribute])
-          value = BlindIndex.generate_bidx(value, bi)
           attribute = bi[:bidx_attribute]
         end
         super(base, document, attribute, value)
