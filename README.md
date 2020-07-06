@@ -95,7 +95,7 @@ We also recommend adding a unique index to the blind index column through a data
 add_index :users, :email_bidx, unique: true
 ```
 
-For `allow_blank: true`, use an expression:
+For `allow_blank: true`, use:
 
 ```ruby
 class User < ApplicationRecord
@@ -104,7 +104,7 @@ class User < ApplicationRecord
 end
 ```
 
-For `case_sensitive: false`, also use an expression:
+For `case_sensitive: false`, use:
 
 ```ruby
 class User < ApplicationRecord
