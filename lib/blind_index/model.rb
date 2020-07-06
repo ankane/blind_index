@@ -92,6 +92,7 @@ module BlindIndex
 
           # use include so user can override
           include InstanceMethods if blind_indexes.size == 1
+          prepend ActiveRecordInstanceMethods if blind_indexes.size == 1 && activerecord
         end
       end
     end
@@ -103,6 +104,33 @@ module BlindIndex
         else
           super
         end
+      end
+    end
+
+    module ActiveRecordInstanceMethods
+      def update_columns(attributes)
+        return super unless attributes.is_a?(Hash)
+
+        # transform keys like Active Record
+        attributes = attributes.transform_keys do |key|
+          n = key.to_s
+          self.class.attribute_aliases[n] || n
+        end
+
+        blind_indexes = self.class.blind_indexes.select { |_, bi| attributes.key?(bi[:attribute].to_s) }
+        return super unless blind_indexes.any?
+
+        blind_indexes.each do |_, blind_index|
+          attribute = blind_index[:attribute].to_s
+          # check read only
+          verify_readonly_attribute(attribute)
+
+          bidx_attribute = blind_index[:bidx_attribute]
+          value = BlindIndex.generate_bidx(attributes[attribute], **blind_index)
+          attributes[bidx_attribute] = value
+        end
+
+        super(attributes)
       end
     end
   end

@@ -1,5 +1,6 @@
 ## 2.1.0 (unreleased)
 
+- Added support for `update_column` and `update_columns`
 - Improved performance of uniqueness validations
 - Fixed deprecation warnings in Ruby 2.7 with Mongoid
 

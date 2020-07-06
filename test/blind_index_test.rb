@@ -243,6 +243,22 @@ class BlindIndexTest < Minitest::Test
     assert_nil user.phone_bidx
   end
 
+  def test_lockbox_update_column
+    skip if mongoid?
+
+    user = create_user(phone: "555-555-5555")
+    user.update_column(:phone, "555-555-0000")
+    assert_equal User.generate_phone_bidx("555-555-0000"), user.phone_bidx
+  end
+
+  def test_lockbox_updates_column
+    skip if mongoid?
+
+    user = create_user(phone: "555-555-5555")
+    user.update_columns(phone: "555-555-0000")
+    assert_equal User.generate_phone_bidx("555-555-0000"), user.phone_bidx
+  end
+
   def test_set
     user = User.new
     user.email = "test@example.org"
