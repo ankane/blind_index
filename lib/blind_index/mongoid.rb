@@ -49,7 +49,8 @@ module BlindIndex
 
       # change attribute name here instead of validate_each for better error message
       def create_criteria(base, document, attribute, value)
-        if base.respond_to?(:blind_indexes) && (bi = base.blind_indexes[attribute])
+        klass = document.class
+        if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
           attribute = bi[:bidx_attribute]
         end
         super(base, document, attribute, value)
