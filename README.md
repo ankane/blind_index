@@ -69,6 +69,16 @@ And query away
 User.where(email: "test@example.org")
 ```
 
+## Expressions
+
+You can apply expressions to attributes before indexing and searching. This gives you the the ability to perform case-insensitive searches and more.
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, expression: ->(v) { v.downcase }
+end
+```
+
 ## Validations
 
 To prevent duplicates, use:
@@ -81,13 +91,25 @@ end
 
 We also recommend adding a unique index to the blind index column through a database migration.
 
-## Expressions
+```ruby
+add_index :users, :email_bidx, unique: true
+```
 
-You can apply expressions to attributes before indexing and searching. This gives you the the ability to perform case-insensitive searches and more.
+For `allow_blank: true`, use an expression:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, expression: ->(v) { v.presence }
+  validates :email, uniqueness: {allow_blank: true}
+end
+```
+
+For `case_sensitive: false`, also use an expression:
 
 ```ruby
 class User < ApplicationRecord
   blind_index :email, expression: ->(v) { v.downcase }
+  validates :email, uniqueness: true # for best performance, leave out {case_sensitive: false}
 end
 ```
 
