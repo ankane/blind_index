@@ -26,13 +26,13 @@ Add this line to your application’s Gemfile:
 gem 'blind_index'
 ```
 
-## Getting Started
+## Prep
 
 Your model should already be set up with Lockbox or attr_encrypted. The examples are for a `User` model with `encrypts :email` or `attr_encrypted :email`. See the full examples for [Lockbox](https://ankane.org/securing-user-emails-lockbox) and [attr_encrypted](https://ankane.org/securing-user-emails-in-rails) if needed.
 
 Also, if you use attr_encrypted, [generate a key](#key-generation).
 
----
+## Getting Started
 
 Create a migration to add a column for the blind index
 
