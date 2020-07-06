@@ -26,9 +26,9 @@ module BlindIndex
 
               criterion[bidx_key] =
                 if value.is_a?(Array)
-                  value.map { |v| BlindIndex.generate_bidx(v, bi) }
+                  value.map { |v| BlindIndex.generate_bidx(v, **bi) }
                 else
-                  BlindIndex.generate_bidx(value, bi)
+                  BlindIndex.generate_bidx(value, **bi)
                 end
             end
           end

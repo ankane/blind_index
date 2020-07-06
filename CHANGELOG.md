@@ -1,6 +1,7 @@
 ## 2.1.0 (unreleased)
 
 - Improved performance of uniqueness validations
+- Fixed deprecation warnings in Ruby 2.7 with Mongoid
 
 ## 2.0.2 (2020-06-01)
 
