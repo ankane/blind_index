@@ -1,4 +1,4 @@
-## 2.1.0 (unreleased)
+## 2.1.0 (2020-07-06)
 
 - Improved performance of uniqueness validations
 - Fixed deprecation warnings in Ruby 2.7 with Mongoid
