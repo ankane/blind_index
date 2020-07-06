@@ -118,6 +118,13 @@ class BlindIndexTest < Minitest::Test
     end
   end
 
+  def test_validation_allow_blank_nil
+    User.create!(email: nil)
+    user = User.new(email: nil)
+    assert user.valid?
+    assert user.save!
+  end
+
   def test_nil
     user = create_user(email: nil)
     assert_nil user.email_bidx
