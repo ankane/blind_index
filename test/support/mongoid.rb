@@ -21,8 +21,8 @@ class User
 
   encrypts :email, :phone
 
-  index({email_bidx: 1}, {unique: true})
-  index({email_ci_bidx: 1}, {unique: true})
+  index({email_bidx: 1}, {unique: true, partial_filter_expression: {email_bidx: {"$type" => "string"}}})
+  index({email_ci_bidx: 1}, {unique: true, partial_filter_expression: {email_ci_bidx: {"$type" => "string"}}})
 end
 
 User.create_indexes
