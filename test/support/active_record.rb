@@ -2,12 +2,12 @@ ActiveRecord::Base.logger = $logger
 
 adapter = ENV["ADAPTER"] || "sqlite"
 case adapter
+when "sqlite"
+  ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 when "postgresql"
   ActiveRecord::Base.establish_connection adapter: "postgresql", database: "blind_index_test"
 when "mysql"
   ActiveRecord::Base.establish_connection adapter: "mysql2", database: "blind_index_test"
-when "sqlite"
-  ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 else
   raise "Unknown adapter: #{adapter}"
 end
