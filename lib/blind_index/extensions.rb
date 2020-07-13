@@ -29,6 +29,7 @@ module BlindIndex
     end
 
     # Active Record 6.1+
+    # https://github.com/rails/rails/commit/56f30962b84fc53b76001301fb830c1594fd377e
     module PredicateBuilder
       def build_from_hash(hash)
         new_hash = hash.dup
