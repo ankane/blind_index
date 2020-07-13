@@ -1,8 +1,18 @@
 ActiveRecord::Base.logger = $logger
 
-ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+adapter = ENV["ADAPTER"] || "sqlite"
+case adapter
+when "postgresql"
+  ActiveRecord::Base.establish_connection adapter: "postgresql", database: "blind_index_test"
+when "mysql"
+  ActiveRecord::Base.establish_connection adapter: "mysql2", database: "blind_index_test"
+when "sqlite"
+  ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+else
+  raise "Unknown adapter: #{adapter}"
+end
 
-ActiveRecord::Migration.create_table :users do |t|
+ActiveRecord::Migration.create_table :users, force: true do |t|
   t.string :encrypted_email
   t.string :encrypted_email_iv
   t.string :email_bidx, index: {unique: true}
