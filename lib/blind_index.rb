@@ -138,15 +138,11 @@ ActiveSupport.on_load(:active_record) do
   require "blind_index/extensions"
   extend BlindIndex::Model
 
-  ActiveRecord::TableMetadata.prepend(BlindIndex::Extensions::TableMetadata)
+  ActiveRecord::PredicateBuilder.prepend(BlindIndex::Extensions::PredicateBuilder)
   ActiveRecord::DynamicMatchers::Method.prepend(BlindIndex::Extensions::DynamicMatchers)
 
   unless ActiveRecord::VERSION::STRING.start_with?("5.1.")
     ActiveRecord::Validations::UniquenessValidator.prepend(BlindIndex::Extensions::UniquenessValidator)
-  end
-
-  if ActiveRecord::VERSION::STRING >= "6.1."
-    ActiveRecord::PredicateBuilder.prepend(BlindIndex::Extensions::PredicateBuilder)
   end
 end
 
