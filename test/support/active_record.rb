@@ -25,6 +25,9 @@ ActiveRecord::Migration.create_table :users, force: true do |t|
   t.string :initials_bidx
   t.string :phone_ciphertext
   t.string :phone_bidx
+  t.string :city_ciphertext
+  t.string :city_bidx_v2
+  t.string :city_bidx_v3
 end
 
 class User < ActiveRecord::Base
@@ -34,7 +37,7 @@ class User < ActiveRecord::Base
   attr_encrypted :first_name, key: SecureRandom.random_bytes(32)
   attr_encrypted :last_name, key: SecureRandom.random_bytes(32)
 
-  encrypts :phone
+  encrypts :phone, :city
 
   # ensure custom method still works
   def read_attribute_for_validation(key)

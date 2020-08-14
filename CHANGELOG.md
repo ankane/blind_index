@@ -1,3 +1,7 @@
+## 2.1.1 (unreleased)
+
+- Fixed `version` option
+
 ## 2.1.0 (2020-07-06)
 
 - Improved performance of uniqueness validations

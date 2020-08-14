@@ -32,6 +32,7 @@ class User
   blind_index :email_binary, algorithm: :argon2, key: BlindIndex.generate_key, attribute: :email, encode: defined?(Mongoid) # can't get binary working with Mongoid
   blind_index :initials, key: BlindIndex.generate_key, size: 16
   blind_index :phone
+  blind_index :city, version: 2, rotate: {version: 3, master_key: BlindIndex.generate_key}
 
   validates :email, uniqueness: {allow_blank: true}
   validates :email_ci, uniqueness: {allow_blank: true}
