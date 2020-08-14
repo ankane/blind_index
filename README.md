@@ -291,7 +291,7 @@ BlindIndex.master_key = Rails.application.credentials.blind_index_master_key
 
 ## LIKE, ILIKE, and Full-Text Searching
 
-To use `LIKE`, `ILIKE`, or full-text searching, data must be loaded, decrypted, and searched in memory.
+Unfortunately, blind indexes can’t be used for `LIKE`, `ILIKE`, or full-text searching. Instead, records must be loaded, decrypted, and searched in memory.
 
 For `LIKE`, use:
 
