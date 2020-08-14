@@ -10,7 +10,7 @@ Learn more about [securing sensitive data in Rails](https://ankane.org/sensitive
 
 ## How It Works
 
-We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function to the value we’re searching and then perform a database search. This results in performant queries for exact matches. `LIKE` queries are not possible, but you can index expressions.
+We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function to the value we’re searching and then perform a database search. This results in performant queries for exact matches. `LIKE` queries are [not possible](#like-ilike-and-fuzzy-searching), but you can index expressions.
 
 ## Leakage
 
@@ -288,6 +288,30 @@ or create `config/initializers/blind_index.rb` with something like
 ```ruby
 BlindIndex.master_key = Rails.application.credentials.blind_index_master_key
 ```
+
+## LIKE, ILIKE, and Fuzzy Searching
+
+It’s not possible to use `LIKE`, `ILIKE`, or fuzzy searching on the database-level without leaking too much information about the data. Instead, search in memory.
+
+For `LIKE`, use:
+
+```ruby
+User.find { |u| u.email.include?("value") }
+```
+
+For `ILIKE`, use:
+
+```ruby
+User.find { |u| u.email =~ /value/i }
+```
+
+For fuzzy searching, use a gem like [FuzzyMatch](https://github.com/seamusabshere/fuzzy_match):
+
+```ruby
+FuzzyMatch.new(User.all, read: :email).find("value")
+```
+
+If the number of records is large, try to find a way to narrow it down. An [expression index](#expressions) is one way to do this, but leaks which records have the same value of the expression, so use it carefully.
 
 ## Reference
 
