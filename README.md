@@ -10,7 +10,7 @@ Learn more about [securing sensitive data in Rails](https://ankane.org/sensitive
 
 ## How It Works
 
-We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function to the value we’re searching and then perform a database search. This results in performant queries for exact matches. `LIKE` queries are [not possible](#like-ilike-and-full-text-searching), but you can index expressions.
+We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function to the value we’re searching and then perform a database search. This results in performant queries for exact matches. Efficient `LIKE` queries are [not possible](#like-ilike-and-full-text-searching), but you can index expressions.
 
 ## Leakage
 
@@ -291,7 +291,7 @@ BlindIndex.master_key = Rails.application.credentials.blind_index_master_key
 
 ## LIKE, ILIKE, and Full-Text Searching
 
-It’s not possible to use `LIKE`, `ILIKE`, or full-text searching on the database-level without leaking too much information. Instead, search in memory.
+To use `LIKE`, `ILIKE`, or full-text searching, data must be loaded, decrypted, and searched in memory.
 
 For `LIKE`, use:
 
