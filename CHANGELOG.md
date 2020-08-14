@@ -1,4 +1,4 @@
-## 2.1.1 (unreleased)
+## 2.1.1 (2020-08-14)
 
 - Fixed `version` option
 
