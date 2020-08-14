@@ -10,7 +10,7 @@ Learn more about [securing sensitive data in Rails](https://ankane.org/sensitive
 
 ## How It Works
 
-We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function to the value we’re searching and then perform a database search. This results in performant queries for exact matches. `LIKE` queries are [not possible](#like-ilike-and-fuzzy-searching), but you can index expressions.
+We use [this approach](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql) by Scott Arciszewski. To summarize, we compute a keyed hash of the sensitive data and store it in a column. To query, we apply the keyed hash function to the value we’re searching and then perform a database search. This results in performant queries for exact matches. `LIKE` queries are [not possible](#like-ilike-and-full-text-searching), but you can index expressions.
 
 ## Leakage
 
@@ -289,9 +289,9 @@ or create `config/initializers/blind_index.rb` with something like
 BlindIndex.master_key = Rails.application.credentials.blind_index_master_key
 ```
 
-## LIKE, ILIKE, and Fuzzy Searching
+## LIKE, ILIKE, and Full-Text Searching
 
-It’s not possible to use `LIKE`, `ILIKE`, or fuzzy searching on the database-level without leaking too much information about the data. Instead, search in memory.
+It’s not possible to use `LIKE`, `ILIKE`, or full-text searching on the database-level without leaking too much information. Instead, search in memory.
 
 For `LIKE`, use:
 
@@ -305,7 +305,7 @@ For `ILIKE`, use:
 User.find { |u| u.email =~ /value/i }
 ```
 
-For fuzzy searching, use a gem like [FuzzyMatch](https://github.com/seamusabshere/fuzzy_match):
+For full-text or fuzzy searching, use a gem like [FuzzyMatch](https://github.com/seamusabshere/fuzzy_match):
 
 ```ruby
 FuzzyMatch.new(User.all, read: :email).find("value")
