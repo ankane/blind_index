@@ -296,13 +296,13 @@ Unfortunately, blind indexes can’t be used for `LIKE`, `ILIKE`, or full-text s
 For `LIKE`, use:
 
 ```ruby
-User.find { |u| u.email.include?("value") }
+User.select { |u| u.email.include?("value") }
 ```
 
 For `ILIKE`, use:
 
 ```ruby
-User.find { |u| u.email =~ /value/i }
+User.select { |u| u.email =~ /value/i }
 ```
 
 For full-text or fuzzy searching, use a gem like [FuzzyMatch](https://github.com/seamusabshere/fuzzy_match):
