@@ -327,7 +327,7 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_joins
-    skip "Not supported"
+    skip if mongoid? || ActiveRecord::VERSION::STRING.to_f < 5.2
 
     Group.delete_all
     group = Group.create!

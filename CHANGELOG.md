@@ -1,3 +1,7 @@
+## 2.2.0 (unreleased)
+
+- Added support for joins for Active Record 5.2+
+
 ## 2.1.1 (2020-08-14)
 
 - Fixed `version` option
