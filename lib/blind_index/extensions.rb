@@ -31,22 +31,18 @@ module BlindIndex
     # Active Record 6.1+
     # https://github.com/rails/rails/commit/56f30962b84fc53b76001301fb830c1594fd377e
     module PredicateBuilder
-      def build_from_hash(hash)
-        new_hash = hash.dup
-        if table.has_blind_indexes?
-          hash.each_key do |key|
-            if key.respond_to?(:to_sym) && (bi = table.send(:klass).blind_indexes[key.to_sym]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
-              value = new_hash.delete(key)
-              new_hash[bi[:bidx_attribute]] =
-                if value.is_a?(Array)
-                  value.map { |v| BlindIndex.generate_bidx(v, **bi) }
-                else
-                  BlindIndex.generate_bidx(value, **bi)
-                end
+      def build(attribute, value, operator = nil)
+        if table.has_blind_indexes? && (bi = table.send(:klass).blind_indexes[attribute.name.to_sym]) && !value.is_a?(ActiveRecord::StatementCache::Substitute)
+          attribute = attribute.relation[bi[:bidx_attribute]]
+          value =
+            if value.is_a?(Array)
+              value.map { |v| BlindIndex.generate_bidx(v, **bi) }
+            else
+              BlindIndex.generate_bidx(value, **bi)
             end
-          end
         end
-        super(new_hash)
+
+        super(attribute, value, operator)
       end
     end
 

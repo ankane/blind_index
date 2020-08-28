@@ -327,8 +327,6 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_joins
-    skip "Not supported"
-
     Group.delete_all
     group = Group.create!
     user = create_user(group: group)
