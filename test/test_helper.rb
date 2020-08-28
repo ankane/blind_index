@@ -27,6 +27,8 @@ else
 end
 
 class User
+  belongs_to :group, optional: true
+
   blind_index :email
   blind_index :email_ci, algorithm: :scrypt, attribute: :email, expression: ->(v) { v.try(:downcase) }
   blind_index :email_binary, algorithm: :argon2, key: BlindIndex.generate_key, attribute: :email, encode: defined?(Mongoid) # can't get binary working with Mongoid
@@ -46,4 +48,8 @@ end
 
 class ActiveUser < User
   blind_index :child, key: BlindIndex.generate_key
+end
+
+class Group
+  has_many :users
 end

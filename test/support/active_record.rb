@@ -28,6 +28,10 @@ ActiveRecord::Migration.create_table :users, force: true do |t|
   t.string :city_ciphertext
   t.string :city_bidx_v2
   t.string :city_bidx_v3
+  t.references :group
+end
+
+ActiveRecord::Migration.create_table :groups, force: true do |t|
 end
 
 class User < ActiveRecord::Base
@@ -43,4 +47,7 @@ class User < ActiveRecord::Base
   def read_attribute_for_validation(key)
     super
   end
+end
+
+class Group < ActiveRecord::Base
 end

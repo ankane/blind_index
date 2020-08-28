@@ -29,3 +29,7 @@ class User
 end
 
 User.create_indexes
+
+class Group
+  include Mongoid::Document
+end

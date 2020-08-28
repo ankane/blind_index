@@ -319,6 +319,22 @@ class BlindIndexTest < Minitest::Test
     assert User.find_by(rotated_city: "Test")
   end
 
+  def test_association
+    Group.delete_all
+    group = Group.create!
+    user = create_user(group: group)
+    assert group.users.find_by(email: "test@example.org")
+  end
+
+  def test_joins
+    skip "Not supported"
+
+    Group.delete_all
+    group = Group.create!
+    user = create_user(group: group)
+    assert Group.joins(:users).where(users: {email: "test@example.org"}).first
+  end
+
   private
 
   def random_key
