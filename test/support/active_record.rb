@@ -1,8 +1,18 @@
 ActiveRecord::Base.logger = $logger
 
-ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+adapter = ENV["ADAPTER"] || "sqlite"
+case adapter
+when "sqlite"
+  ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+when "postgresql"
+  ActiveRecord::Base.establish_connection adapter: "postgresql", database: "blind_index_test"
+when "mysql"
+  ActiveRecord::Base.establish_connection adapter: "mysql2", database: "blind_index_test"
+else
+  raise "Unknown adapter: #{adapter}"
+end
 
-ActiveRecord::Migration.create_table :users do |t|
+ActiveRecord::Migration.create_table :users, force: true do |t|
   t.string :encrypted_email
   t.string :encrypted_email_iv
   t.string :email_bidx, index: {unique: true}
@@ -15,6 +25,13 @@ ActiveRecord::Migration.create_table :users do |t|
   t.string :initials_bidx
   t.string :phone_ciphertext
   t.string :phone_bidx
+  t.string :city_ciphertext
+  t.string :city_bidx_v2
+  t.string :city_bidx_v3
+  t.references :group
+end
+
+ActiveRecord::Migration.create_table :groups, force: true do |t|
 end
 
 class User < ActiveRecord::Base
@@ -24,10 +41,13 @@ class User < ActiveRecord::Base
   attr_encrypted :first_name, key: SecureRandom.random_bytes(32)
   attr_encrypted :last_name, key: SecureRandom.random_bytes(32)
 
-  encrypts :phone
+  encrypts :phone, :city
 
   # ensure custom method still works
   def read_attribute_for_validation(key)
     super
   end
+end
+
+class Group < ActiveRecord::Base
 end

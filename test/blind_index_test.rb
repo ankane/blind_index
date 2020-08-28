@@ -185,8 +185,8 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_inheritance
-    assert_equal %i[email email_ci email_binary initials phone], User.blind_indexes.keys
-    assert_equal %i[email email_ci email_binary initials phone child], ActiveUser.blind_indexes.keys
+    assert_equal %i[email email_ci email_binary initials phone city rotated_city], User.blind_indexes.keys
+    assert_equal User.blind_indexes.keys + %i[child], ActiveUser.blind_indexes.keys
   end
 
   def test_initials
@@ -300,6 +300,39 @@ class BlindIndexTest < Minitest::Test
     assert_nil user.email_bidx
     user.compute_email_bidx
     assert user.email_bidx
+  end
+
+  def test_version
+    create_user(city: "Test")
+    assert User.find_by(city: "Test")
+  end
+
+  def test_rotate
+    user = create_user(city: "Test")
+    assert user.city_bidx_v2
+    assert user.city_bidx_v3
+    refute_equal user.city_bidx_v2, user.city_bidx_v3
+
+    assert User.find_by(city: "Test")
+
+    # non-public
+    assert User.find_by(rotated_city: "Test")
+  end
+
+  def test_association
+    Group.delete_all
+    group = Group.create!
+    user = create_user(group: group)
+    assert group.users.find_by(email: "test@example.org")
+  end
+
+  def test_joins
+    skip "Not supported"
+
+    Group.delete_all
+    group = Group.create!
+    user = create_user(group: group)
+    assert Group.joins(:users).where(users: {email: "test@example.org"}).first
   end
 
   private

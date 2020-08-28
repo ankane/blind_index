@@ -18,11 +18,18 @@ class User
   field :initials_bidx, type: String
   field :phone_ciphertext, type: String
   field :phone_bidx, type: String
+  field :city_ciphertext, type: String
+  field :city_bidx_v2, type: String
+  field :city_bidx_v3, type: String
 
-  encrypts :email, :phone
+  encrypts :email, :phone, :city
 
   index({email_bidx: 1}, {unique: true, partial_filter_expression: {email_bidx: {"$type" => "string"}}})
   index({email_ci_bidx: 1}, {unique: true, partial_filter_expression: {email_ci_bidx: {"$type" => "string"}}})
 end
 
 User.create_indexes
+
+class Group
+  include Mongoid::Document
+end

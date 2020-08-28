@@ -4,3 +4,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "activerecord", github: "rails/rails"
+
+# to test different adapters
+# gem "mysql2"
+# gem "pg"

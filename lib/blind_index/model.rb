@@ -10,7 +10,7 @@ module BlindIndex
         # check here so we validate rotate options as well
         unknown_keywords = options.keys - [:algorithm, :attribute, :bidx_attribute,
           :callback, :cost, :encode, :expression, :insecure_key, :iterations, :key,
-          :legacy, :master_key, :size, :slow]
+          :legacy, :master_key, :size, :slow, :version]
         raise ArgumentError, "unknown keywords: #{unknown_keywords.join(", ")}" if unknown_keywords.any?
 
         attribute = options[:attribute] || name
