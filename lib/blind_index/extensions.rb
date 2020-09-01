@@ -47,7 +47,7 @@ module BlindIndex
 
           super(attribute, value, operator)
         end
-      elsif ActiveRecord::VERSION::STRING.to_f >= 5.2
+      else # Active Record 5.2+
         def build(attribute, value)
           if table.has_blind_indexes? && (bi = table.send(:klass).blind_indexes[attribute.name.to_sym]) && !value.is_a?(ActiveRecord::StatementCache::Substitute)
             attribute = attribute.relation[bi[:bidx_attribute]]
