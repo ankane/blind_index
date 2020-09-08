@@ -31,36 +31,19 @@ module BlindIndex
     end
 
     module PredicateBuilder
-      # Active Record 6.1+
       # https://github.com/rails/rails/commit/56f30962b84fc53b76001301fb830c1594fd377e
-      if ActiveRecord::VERSION::STRING.to_f >= 6.1
-        def build(attribute, value, operator = nil)
-          if table.has_blind_indexes? && (bi = table.send(:klass).blind_indexes[attribute.name.to_sym]) && !value.is_a?(ActiveRecord::StatementCache::Substitute)
-            attribute = attribute.relation[bi[:bidx_attribute]]
-            value =
-              if value.is_a?(Array)
-                value.map { |v| BlindIndex.generate_bidx(v, **bi) }
-              else
-                BlindIndex.generate_bidx(value, **bi)
-              end
-          end
-
-          super(attribute, value, operator)
+      def build(attribute, value, *args)
+        if table.has_blind_indexes? && (bi = table.send(:klass).blind_indexes[attribute.name.to_sym]) && !value.is_a?(ActiveRecord::StatementCache::Substitute)
+          attribute = attribute.relation[bi[:bidx_attribute]]
+          value =
+            if value.is_a?(Array)
+              value.map { |v| BlindIndex.generate_bidx(v, **bi) }
+            else
+              BlindIndex.generate_bidx(value, **bi)
+            end
         end
-      else # Active Record 5.2+
-        def build(attribute, value)
-          if table.has_blind_indexes? && (bi = table.send(:klass).blind_indexes[attribute.name.to_sym]) && !value.is_a?(ActiveRecord::StatementCache::Substitute)
-            attribute = attribute.relation[bi[:bidx_attribute]]
-            value =
-              if value.is_a?(Array)
-                value.map { |v| BlindIndex.generate_bidx(v, **bi) }
-              else
-                BlindIndex.generate_bidx(value, **bi)
-              end
-          end
 
-          super(attribute, value)
-        end
+        super(attribute, value, *args)
       end
     end
 
