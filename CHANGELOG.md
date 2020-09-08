@@ -1,6 +1,6 @@
-## 2.2.0 (unreleased)
+## 2.2.0 (2020-09-07)
 
-- Added support for where with table for Active Record 5.2+
+- Added support for `where` with table in Active Record 5.2+
 
 ## 2.1.1 (2020-08-14)
 
