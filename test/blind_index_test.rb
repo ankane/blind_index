@@ -342,6 +342,17 @@ class BlindIndexTest < Minitest::Test
     assert Group.joins(:users).where(users: {email: "test@example.org"}).first
   end
 
+  def test_serialized_hash
+    user = create_user
+    assert_nil user.serializable_hash["email_bidx"]
+  end
+
+  def test_to_json
+    user = create_user
+    refute_match "email_bidx", user.to_json(except: [:email_binary_bidx])
+    assert_nil user.as_json["email_bidx"]
+  end
+
   private
 
   def random_key

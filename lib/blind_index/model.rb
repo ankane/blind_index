@@ -97,6 +97,16 @@ module BlindIndex
     end
 
     module InstanceMethods
+      # use same approach as activerecord serialization
+      def serializable_hash(options = nil)
+        options = options.try(:dup) || {}
+
+        options[:except] = Array(options[:except])
+        options[:except] += self.class.blind_indexes.map { |_, v| v[:bidx_attribute] }
+
+        super(options)
+      end
+
       def read_attribute_for_validation(key)
         if (bi = self.class.blind_indexes[key])
           send(bi[:attribute])
