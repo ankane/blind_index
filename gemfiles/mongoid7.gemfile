@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gemspec path: "../../"
+gemspec path: ".."
 
 gem "mongoid", "~> 7"
 gem "lockbox"
