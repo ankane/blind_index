@@ -6,7 +6,7 @@ Works with [Lockbox](https://github.com/ankane/lockbox) ([full example](https://
 
 Learn more about [securing sensitive data in Rails](https://ankane.org/sensitive-data-rails)
 
-[![Build Status](https://travis-ci.org/ankane/blind_index.svg?branch=master)](https://travis-ci.org/ankane/blind_index)
+[![Build Status](https://github.com/ankane/blind_index/workflows/build/badge.svg?branch=master)](https://github.com/ankane/blind_index/actions)
 
 ## How It Works
 
