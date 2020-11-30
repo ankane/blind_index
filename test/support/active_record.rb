@@ -1,4 +1,5 @@
 ActiveRecord::Base.logger = $logger
+ActiveRecord::Migration.verbose = ENV["VERBOSE"]
 
 adapter = ENV["ADAPTER"] || "sqlite"
 case adapter
