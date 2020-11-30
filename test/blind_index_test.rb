@@ -342,6 +342,12 @@ class BlindIndexTest < Minitest::Test
     assert Group.joins(:users).where(users: {email: "test@example.org"}).first
   end
 
+  def test_filter_attributes
+    skip if mongoid? || ActiveRecord::VERSION::MAJOR < 6
+
+    assert_includes User.filter_attributes, "email_bidx"
+  end
+
   private
 
   def random_key
