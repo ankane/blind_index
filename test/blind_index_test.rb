@@ -345,7 +345,7 @@ class BlindIndexTest < Minitest::Test
   def test_filter_attributes
     skip if mongoid? || ActiveRecord::VERSION::MAJOR < 6
 
-    assert_includes User.filter_attributes, "email_bidx"
+    assert_includes User.filter_attributes, /\Aemail_bidx\z/
   end
 
   private
