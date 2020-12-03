@@ -39,7 +39,9 @@ module BlindIndex
           activerecord = defined?(ActiveRecord) && self < ActiveRecord::Base
 
           if activerecord && ActiveRecord::VERSION::MAJOR >= 6
-            self.filter_attributes << bidx_attribute
+            # need to use regexp since strings do partial matching
+            # also, need to use += instead of <<
+            self.filter_attributes += [/\A#{Regexp.escape(bidx_attribute)}\z/]
           end
 
           @blind_indexes ||= {}
