@@ -329,7 +329,7 @@ class BlindIndexTest < Minitest::Test
   def test_association
     Group.delete_all
     group = Group.create!
-    user = create_user(group: group)
+    create_user(group: group)
     assert group.users.find_by(email: "test@example.org")
   end
 
@@ -338,7 +338,7 @@ class BlindIndexTest < Minitest::Test
 
     Group.delete_all
     group = Group.create!
-    user = create_user(group: group)
+    create_user(group: group)
     assert Group.joins(:users).where(users: {email: "test@example.org"}).first
   end
 
