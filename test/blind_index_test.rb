@@ -342,6 +342,23 @@ class BlindIndexTest < Minitest::Test
     assert Group.joins(:users).where(users: {email: "test@example.org"}).first
   end
 
+  def test_inspect_filter_attributes
+    skip if mongoid? || ActiveRecord::VERSION::STRING.to_f < 6
+
+    previous_value = User.filter_attributes
+
+    begin
+      user = create_user
+      assert_includes user.inspect, "email_bidx: [FILTERED]"
+
+      # Active Record still shows nil for filtered attributes
+      user = create_user(email: nil)
+      assert_includes user.inspect, "name: nil"
+    ensure
+      User.filter_attributes = previous_value
+    end
+  end
+
   private
 
   def random_key
