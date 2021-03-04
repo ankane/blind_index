@@ -39,6 +39,8 @@ module BlindIndex
           activerecord = defined?(ActiveRecord) && self < ActiveRecord::Base
 
           if activerecord && ActiveRecord::VERSION::MAJOR >= 6
+            # blind index value isn't really sensitive
+            # but don't need to show it in the Rails console
             self.filter_attributes += [/\A#{Regexp.escape(bidx_attribute)}\z/]
           end
 
