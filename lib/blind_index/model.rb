@@ -36,6 +36,12 @@ module BlindIndex
         key ||= -> { BlindIndex.index_key(table: try(:table_name) || collection_name.to_s, bidx_attribute: bidx_attribute, master_key: options[:master_key], encode: false) }
 
         class_eval do
+          activerecord = defined?(ActiveRecord) && self < ActiveRecord::Base
+
+          if activerecord && ActiveRecord::VERSION::MAJOR >= 6
+            self.filter_attributes += [/\A#{Regexp.escape(bidx_attribute)}\z/]
+          end
+
           @blind_indexes ||= {}
 
           unless respond_to?(:blind_indexes)
@@ -69,8 +75,6 @@ module BlindIndex
           end
 
           if callback
-            activerecord = defined?(ActiveRecord) && self < ActiveRecord::Base
-
             # TODO reuse module
             m = Module.new do
               define_method "#{attribute}=" do |value|
