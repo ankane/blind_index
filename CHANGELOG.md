@@ -1,3 +1,7 @@
+## 2.3.0 (unreleased)
+
+- Added blind indexes to `filter_attributes`
+
 ## 2.2.0 (2020-09-07)
 
 - Added support for `where` with table in Active Record 5.2+
