@@ -262,6 +262,7 @@ For Mongoid, use:
 ```ruby
 class User
   field :email_bidx, type: String
+  index({email_bidx: 1})
 end
 ```
 
