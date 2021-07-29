@@ -13,26 +13,28 @@ else
   raise "Unknown adapter: #{adapter}"
 end
 
-ActiveRecord::Migration.create_table :users, force: true do |t|
-  t.string :encrypted_email
-  t.string :encrypted_email_iv
-  t.string :email_bidx, index: {unique: true}
-  t.string :email_ci_bidx, index: {unique: true}
-  t.binary :email_binary_bidx
-  t.string :encrypted_first_name
-  t.string :encrypted_first_name_iv
-  t.string :encrypted_last_name
-  t.string :encrypted_last_name_iv
-  t.string :initials_bidx
-  t.string :phone_ciphertext
-  t.string :phone_bidx
-  t.string :city_ciphertext
-  t.string :city_bidx_v2
-  t.string :city_bidx_v3
-  t.references :group
-end
+ActiveRecord::Schema.define do
+  create_table :users, force: true do |t|
+    t.string :encrypted_email
+    t.string :encrypted_email_iv
+    t.string :email_bidx, index: {unique: true}
+    t.string :email_ci_bidx, index: {unique: true}
+    t.binary :email_binary_bidx
+    t.string :encrypted_first_name
+    t.string :encrypted_first_name_iv
+    t.string :encrypted_last_name
+    t.string :encrypted_last_name_iv
+    t.string :initials_bidx
+    t.string :phone_ciphertext
+    t.string :phone_bidx
+    t.string :city_ciphertext
+    t.string :city_bidx_v2
+    t.string :city_bidx_v3
+    t.references :group
+  end
 
-ActiveRecord::Migration.create_table :groups, force: true do |t|
+  create_table :groups, force: true do |t|
+  end
 end
 
 class User < ActiveRecord::Base
