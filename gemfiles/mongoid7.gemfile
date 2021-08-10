@@ -2,5 +2,9 @@ source "https://rubygems.org"
 
 gemspec path: ".."
 
+gem "rake"
+gem "minitest", ">= 5"
+gem "attr_encrypted"
 gem "mongoid", "~> 7"
-gem "lockbox"
+gem "scrypt"
+gem "lockbox", ">= 0.2"
