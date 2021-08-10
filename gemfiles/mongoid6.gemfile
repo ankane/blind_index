@@ -4,7 +4,6 @@ gemspec path: ".."
 
 gem "rake"
 gem "minitest", ">= 5"
-gem "attr_encrypted"
 gem "mongoid", "~> 6"
 gem "scrypt"
 gem "lockbox", ">= 0.2"
