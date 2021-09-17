@@ -15,17 +15,15 @@ end
 
 ActiveRecord::Schema.define do
   create_table :users, force: true do |t|
-    t.string :encrypted_email
-    t.string :encrypted_email_iv
+    t.string :email_ciphertext
     t.string :email_bidx, index: {unique: true}
     t.string :email_ci_bidx, index: {unique: true}
     t.binary :email_binary_bidx
-    t.string :encrypted_first_name
-    t.string :encrypted_first_name_iv
-    t.string :encrypted_last_name
-    t.string :encrypted_last_name_iv
+    t.string :first_name_ciphertext
+    t.string :last_name_ciphertext
     t.string :initials_bidx
-    t.string :phone_ciphertext
+    t.string :encrypted_phone
+    t.string :encrypted_phone_iv
     t.string :phone_bidx
     t.string :city_ciphertext
     t.string :city_bidx_v2
@@ -40,11 +38,9 @@ end
 class User < ActiveRecord::Base
   attribute :initials, :string
 
-  attr_encrypted :email, key: SecureRandom.random_bytes(32)
-  attr_encrypted :first_name, key: SecureRandom.random_bytes(32)
-  attr_encrypted :last_name, key: SecureRandom.random_bytes(32)
+  encrypts :email, :first_name, :last_name, :city
 
-  encrypts :phone, :city
+  attr_encrypted :phone, key: SecureRandom.random_bytes(32)
 
   # ensure custom method still works
   def read_attribute_for_validation(key)

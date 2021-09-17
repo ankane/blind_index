@@ -229,25 +229,25 @@ class BlindIndexTest < Minitest::Test
     assert_equal expected, User.last.email_bidx
   end
 
-  def test_lockbox
+  def test_attr_encrypted
     create_user(phone: "555-555-5555")
     assert User.find_by(phone: "555-555-5555")
   end
 
   def test_lockbox_restore
     user = User.new
-    user.phone = "555-555-5555"
-    assert user.phone
-    assert user.phone_ciphertext
-    assert user.phone_bidx
+    user.email = "test@example.org"
+    assert user.email
+    assert user.email_ciphertext
+    assert user.email_bidx
     if mongoid?
-      user.reset_phone!
+      user.reset_email!
     else
-      user.restore_phone!
+      user.restore_email!
     end
-    assert_nil user.phone
-    assert_nil user.phone_ciphertext
-    assert_nil user.phone_bidx
+    assert_nil user.email
+    assert_nil user.email_ciphertext
+    assert_nil user.email_bidx
   end
 
   def test_set
