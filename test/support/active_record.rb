@@ -38,9 +38,13 @@ end
 class User < ActiveRecord::Base
   attribute :initials, :string
 
-  encrypts :email, :first_name, :last_name, :city
-
-  attr_encrypted :phone, key: SecureRandom.random_bytes(32)
+  if ActiveRecord::VERSION::MAJOR >= 7
+    lockbox_encrypts :email, :first_name, :last_name, :city
+    alias_attribute :phone, :encrypted_phone
+  else
+    encrypts :email, :first_name, :last_name, :city
+    attr_encrypted :phone, key: SecureRandom.random_bytes(32)
+  end
 
   # ensure custom method still works
   def read_attribute_for_validation(key)
