@@ -4,8 +4,8 @@ gemspec
 
 gem "rake"
 gem "minitest", ">= 5"
-gem "attr_encrypted"
-gem "activerecord", "~> 6.1.0"
+# gem "attr_encrypted"
+gem "activerecord", "~> 7.0.0"
 gem "scrypt"
 gem "benchmark-ips"
 gem "lockbox", ">= 0.2"
