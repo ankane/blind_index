@@ -366,12 +366,8 @@ class BlindIndexTest < Minitest::Test
   end
 
   def with_master_key(key)
-    previous_key = BlindIndex.master_key
-    begin
-      BlindIndex.master_key = key
+    BlindIndex.stub(:master_key, key) do
       yield
-    ensure
-      BlindIndex.master_key = previous_key
     end
   end
 
