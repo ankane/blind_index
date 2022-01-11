@@ -1,7 +1,9 @@
 # dependencies
 require "active_support"
-require "openssl"
 require "argon2/kdf"
+
+# stdlib
+require "openssl"
 
 # modules
 require "blind_index/backfill"
