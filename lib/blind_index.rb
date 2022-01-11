@@ -142,14 +142,8 @@ ActiveSupport.on_load(:active_record) do
 
   ActiveRecord::TableMetadata.prepend(BlindIndex::Extensions::TableMetadata)
   ActiveRecord::DynamicMatchers::Method.prepend(BlindIndex::Extensions::DynamicMatchers)
-
-  unless ActiveRecord::VERSION::STRING.to_f == 5.1
-    ActiveRecord::Validations::UniquenessValidator.prepend(BlindIndex::Extensions::UniquenessValidator)
-  end
-
-  if ActiveRecord::VERSION::STRING.to_f >= 5.2
-    ActiveRecord::PredicateBuilder.prepend(BlindIndex::Extensions::PredicateBuilder)
-  end
+  ActiveRecord::Validations::UniquenessValidator.prepend(BlindIndex::Extensions::UniquenessValidator)
+  ActiveRecord::PredicateBuilder.prepend(BlindIndex::Extensions::PredicateBuilder)
 end
 
 ActiveSupport.on_load(:mongoid) do

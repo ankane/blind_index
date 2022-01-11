@@ -50,7 +50,7 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_where_table
-    skip if mongoid? || ActiveRecord::VERSION::STRING.to_f < 5.2
+    skip if mongoid?
 
     create_user
     assert User.where(users: {email: "test@example.org"}).first
@@ -334,7 +334,7 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_joins
-    skip if mongoid? || ActiveRecord::VERSION::STRING.to_f < 5.2
+    skip if mongoid?
 
     Group.delete_all
     group = Group.create!

@@ -1,26 +1,6 @@
 module BlindIndex
   module Extensions
     module TableMetadata
-      if ActiveRecord::VERSION::STRING.to_f < 5.2
-        def resolve_column_aliases(hash)
-          new_hash = super
-          if has_blind_indexes?
-            hash.each_key do |key|
-              if key.respond_to?(:to_sym) && (bi = klass.blind_indexes[key.to_sym]) && !new_hash[key].is_a?(ActiveRecord::StatementCache::Substitute)
-                value = new_hash.delete(key)
-                new_hash[bi[:bidx_attribute]] =
-                  if value.is_a?(Array)
-                    value.map { |v| BlindIndex.generate_bidx(v, **bi) }
-                  else
-                    BlindIndex.generate_bidx(value, **bi)
-                  end
-              end
-            end
-          end
-          new_hash
-        end
-      end
-
       # memoize for performance
       def has_blind_indexes?
         unless defined?(@has_blind_indexes)
@@ -57,20 +37,11 @@ module BlindIndex
       end
 
       # change attribute name here instead of validate_each for better error message
-      if ActiveRecord::VERSION::STRING.to_f >= 5.2
-        def build_relation(klass, attribute, value)
-          if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
-            attribute = bi[:bidx_attribute]
-          end
-          super(klass, attribute, value)
+      def build_relation(klass, attribute, value)
+        if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
+          attribute = bi[:bidx_attribute]
         end
-      else
-        def build_relation(klass, table, attribute, value)
-          if klass.respond_to?(:blind_indexes) && (bi = klass.blind_indexes[attribute])
-            attribute = bi[:bidx_attribute]
-          end
-          super(klass, table, attribute, value)
-        end
+        super(klass, attribute, value)
       end
     end
 
