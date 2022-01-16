@@ -1,4 +1,4 @@
-## 2.3.0 (unreleased)
+## 2.3.0 (2022-01-16)
 
 - Added blind indexes to `filter_attributes`
 - Dropped support for Ruby < 2.6 and Rails < 5.2
