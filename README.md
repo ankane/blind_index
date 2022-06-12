@@ -23,7 +23,7 @@ Here’s a [great article](https://blog.cryptographyengineering.com/2019/02/11/a
 Add this line to your application’s Gemfile:
 
 ```ruby
-gem 'blind_index'
+gem "blind_index"
 ```
 
 ## Prep
