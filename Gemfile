@@ -8,7 +8,7 @@ gem "minitest", ">= 5"
 gem "activerecord", "~> 7.0.0"
 gem "scrypt"
 gem "benchmark-ips"
-gem "lockbox", ">= 0.2"
+gem "lockbox", ">= 1"
 gem "sqlite3"
 
 # to test different adapters

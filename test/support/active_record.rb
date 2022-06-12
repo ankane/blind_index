@@ -38,11 +38,11 @@ end
 class User < ActiveRecord::Base
   attribute :initials, :string
 
+  has_encrypted :email, :first_name, :last_name, :city
+
   if ActiveRecord::VERSION::MAJOR >= 7
-    lockbox_encrypts :email, :first_name, :last_name, :city
     alias_attribute :phone, :encrypted_phone
   else
-    encrypts :email, :first_name, :last_name, :city
     attr_encrypted :phone, key: SecureRandom.random_bytes(32)
   end
 

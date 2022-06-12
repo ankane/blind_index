@@ -28,7 +28,7 @@ gem 'blind_index'
 
 ## Prep
 
-Your model should already be set up with Lockbox or attr_encrypted. The examples are for a `User` model with `encrypts :email` or `attr_encrypted :email`. See the full examples for [Lockbox](https://ankane.org/securing-user-emails-lockbox) and [attr_encrypted](https://ankane.org/securing-user-emails-in-rails) if needed.
+Your model should already be set up with Lockbox or attr_encrypted. The examples are for a `User` model with `has_encrypted :email` or `attr_encrypted :email`. See the full examples for [Lockbox](https://ankane.org/securing-user-emails-lockbox) and [attr_encrypted](https://ankane.org/securing-user-emails-in-rails) if needed.
 
 Also, if you use attr_encrypted, [generate a key](#key-generation).
 
