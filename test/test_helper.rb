@@ -46,8 +46,10 @@ class User
   end
 end
 
-# ensure blind_index does not cause model schema to load
-raise "blind_index loading model schema early" if User.send(:schema_loaded?)
+unless defined?(Mongoid)
+  # ensure blind_index does not cause model schema to load
+  raise "blind_index loading model schema early" if User.send(:schema_loaded?)
+end
 
 class ActiveUser < User
   blind_index :child, key: BlindIndex.generate_key
