@@ -1,3 +1,7 @@
+## 2.3.1 (unreleased)
+
+- Fixed error with `backfill` when `bidx_attribute` is a symbol
+
 ## 2.3.0 (2022-01-16)
 
 - Added blind indexes to `filter_attributes`

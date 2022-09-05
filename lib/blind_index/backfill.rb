@@ -21,8 +21,8 @@ module BlindIndex
     # modify in-place
     def filter_columns!(columns)
       columns = Array(columns).map(&:to_s)
-      blind_indexes.select! { |_, v| columns.include?(v[:bidx_attribute]) }
-      bad_columns = columns - blind_indexes.map { |_, v| v[:bidx_attribute] }
+      blind_indexes.select! { |_, v| columns.include?(v[:bidx_attribute].to_s) }
+      bad_columns = columns - blind_indexes.map { |_, v| v[:bidx_attribute].to_s }
       raise ArgumentError, "Bad column: #{bad_columns.first}" if bad_columns.any?
     end
 
