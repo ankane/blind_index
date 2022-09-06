@@ -1,4 +1,4 @@
-## 2.3.1 (unreleased)
+## 2.3.1 (2022-09-06)
 
 - Fixed error with `backfill` when `bidx_attribute` is a symbol
 
