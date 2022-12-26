@@ -6,32 +6,34 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - ruby: 3.1
-          gemfile: Gemfile
-        - ruby: "3.0"
-          gemfile: gemfiles/activerecord61.gemfile
-        - ruby: 2.7
-          gemfile: gemfiles/activerecord60.gemfile
-        - ruby: 2.6
-          gemfile: gemfiles/activerecord52.gemfile
-        - ruby: 3.1
-          gemfile: gemfiles/mongoid8.gemfile
-          mongodb: true
-        - ruby: 2.7
-          gemfile: gemfiles/mongoid7.gemfile
-          mongodb: true
-        - ruby: 2.6
-          gemfile: gemfiles/mongoid6.gemfile
-          mongodb: true
+          - ruby: 3.2
+            gemfile: Gemfile
+          - ruby: 3.1
+            gemfile: Gemfile
+          - ruby: "3.0"
+            gemfile: gemfiles/activerecord61.gemfile
+          - ruby: 2.7
+            gemfile: gemfiles/activerecord60.gemfile
+          - ruby: 2.6
+            gemfile: gemfiles/activerecord52.gemfile
+          - ruby: 3.1
+            gemfile: gemfiles/mongoid8.gemfile
+            mongodb: true
+          - ruby: 2.7
+            gemfile: gemfiles/mongoid7.gemfile
+            mongodb: true
+          - ruby: 2.6
+            gemfile: gemfiles/mongoid6.gemfile
+            mongodb: true
     runs-on: ubuntu-latest
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - if: ${{ matrix.mongodb }}
-      uses: ankane/setup-mongodb@v1
-    - run: bundle exec rake test
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - if: ${{ matrix.mongodb }}
+        uses: ankane/setup-mongodb@v1
+      - run: bundle exec rake test
