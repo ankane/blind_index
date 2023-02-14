@@ -94,7 +94,7 @@ module BlindIndex
       if records.any?
         with_transaction do
           records.each do |record|
-            record.save!(validate: false)
+            record.save!(validate: false, touch: false)
           end
         end
       end
