@@ -6,10 +6,10 @@ require "argon2/kdf"
 require "openssl"
 
 # modules
-require "blind_index/backfill"
-require "blind_index/key_generator"
-require "blind_index/model"
-require "blind_index/version"
+require_relative "blind_index/backfill"
+require_relative "blind_index/key_generator"
+require_relative "blind_index/model"
+require_relative "blind_index/version"
 
 module BlindIndex
   class Error < StandardError; end
