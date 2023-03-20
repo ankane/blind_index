@@ -137,7 +137,7 @@ module BlindIndex
 end
 
 ActiveSupport.on_load(:active_record) do
-  require "blind_index/extensions"
+  require_relative "blind_index/extensions"
   extend BlindIndex::Model
 
   ActiveRecord::TableMetadata.prepend(BlindIndex::Extensions::TableMetadata)
@@ -147,7 +147,7 @@ ActiveSupport.on_load(:active_record) do
 end
 
 ActiveSupport.on_load(:mongoid) do
-  require "blind_index/mongoid"
+  require_relative "blind_index/mongoid"
   Mongoid::Document::ClassMethods.include(BlindIndex::Model)
   Mongoid::Criteria.prepend(BlindIndex::Mongoid::Criteria)
   Mongoid::Validatable::UniquenessValidator.prepend(BlindIndex::Mongoid::UniquenessValidator)
