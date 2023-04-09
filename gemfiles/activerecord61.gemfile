@@ -4,7 +4,7 @@ gemspec path: ".."
 
 gem "rake"
 gem "minitest", ">= 5"
-gem "attr_encrypted"
+gem "attr_encrypted", "~> 3"
 gem "activerecord", "~> 6.1.0"
 gem "scrypt"
 gem "lockbox", ">= 1"

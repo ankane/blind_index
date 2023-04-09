@@ -40,11 +40,7 @@ class User < ActiveRecord::Base
 
   has_encrypted :email, :first_name, :last_name, :city
 
-  if ActiveRecord::VERSION::MAJOR >= 7
-    alias_attribute :phone, :encrypted_phone
-  else
-    attr_encrypted :phone, key: SecureRandom.random_bytes(32)
-  end
+  attr_encrypted :phone, key: SecureRandom.random_bytes(32)
 
   # ensure custom method still works
   def read_attribute_for_validation(key)
