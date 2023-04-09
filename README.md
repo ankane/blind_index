@@ -346,6 +346,28 @@ class User < ApplicationRecord
 end
 ```
 
+## Compatibility
+
+You can generate blind indexes from other languages as well. For Python, you can use [argon2-cffi](https://github.com/hynek/argon2-cffi).
+
+```python
+from argon2.low_level import Type, hash_secret_raw
+from base64 import b64encode
+
+key = '289737bab72fa97b1f4b081cef00d7b7d75034bcf3183c363feaf3e6441777bc'
+value = 'test@example.org'
+
+bidx = b64encode(hash_secret_raw(
+    secret=value.encode(),
+    salt=bytes.fromhex(key),
+    time_cost=3,
+    memory_cost=2**12,
+    parallelism=1,
+    hash_len=32,
+    type=Type.ID
+))
+```
+
 ## Alternatives
 
 One alternative to blind indexing is to use a deterministic encryption scheme, like [AES-SIV](https://github.com/miscreant/miscreant). In this approach, the encrypted data will be the same for matches. We recommend blind indexing over deterministic encryption because:
