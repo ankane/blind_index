@@ -10,7 +10,7 @@ module BlindIndex
         # check here so we validate rotate options as well
         unknown_keywords = options.keys - [:algorithm, :attribute, :bidx_attribute,
           :callback, :cost, :encode, :expression, :insecure_key, :iterations, :key,
-          :legacy, :master_key, :size, :slow, :version]
+          :key_attribute, :key_table, :legacy, :master_key, :size, :slow, :version]
         raise ArgumentError, "unknown keywords: #{unknown_keywords.join(", ")}" if unknown_keywords.any?
 
         attribute = options[:attribute] || name
@@ -33,7 +33,7 @@ module BlindIndex
         class_method_name = :"generate_#{name}_bidx"
 
         key = options[:key]
-        key ||= -> { BlindIndex.index_key(table: try(:table_name) || collection_name.to_s, bidx_attribute: bidx_attribute, master_key: options[:master_key], encode: false) }
+        key ||= -> { BlindIndex.index_key(table: options[:key_table] || try(:table_name) || collection_name.to_s, bidx_attribute: options[:key_attribute] || bidx_attribute, master_key: options[:master_key], encode: false) }
 
         class_eval do
           activerecord = defined?(ActiveRecord) && self < ActiveRecord::Base
