@@ -224,17 +224,27 @@ Finally, drop the old column.
 
 ## Key Separation
 
-The master key is used to generate unique keys for each blind index. This technique comes from [CipherSweet](https://ciphersweet.paragonie.com/internals/key-hierarchy). The table name and blind index column name are both used in this process. If you need to rename a table with blind indexes, or a blind index column itself, get the key:
+The master key is used to generate unique keys for each blind index. This technique comes from [CipherSweet](https://ciphersweet.paragonie.com/internals/key-hierarchy). The table name and blind index column name are both used in this process.
+
+You can get an individual key with:
 
 ```ruby
 BlindIndex.index_key(table: "users", bidx_attribute: "email_bidx")
 ```
 
-And set it directly before renaming:
+To rename a table with blind indexes, use:
 
 ```ruby
 class User < ApplicationRecord
-  blind_index :email, key: ENV["USER_EMAIL_BLIND_INDEX_KEY"]
+  blind_index :email, key_table: "original_table"
+end
+```
+
+To rename a blind index column itself, use:
+
+```ruby
+class User < ApplicationRecord
+  blind_index :email, key_attribute: "original_column"
 end
 ```
 
