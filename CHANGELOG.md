@@ -1,4 +1,4 @@
-## 2.3.2 (unreleased)
+## 2.3.2 (2023-04-26)
 
 - Added `key_table` and `key_attribute` options
 
