@@ -240,7 +240,7 @@ class User < ApplicationRecord
 end
 ```
 
-To rename a blind index column itself, use:
+To rename a blind index column, use:
 
 ```ruby
 class User < ApplicationRecord
