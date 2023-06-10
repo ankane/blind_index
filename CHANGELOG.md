@@ -1,7 +1,7 @@
 ## 2.4.0 (unreleased)
 
 - Dropped support for Ruby < 3 and Rails < 6.1
-- Dropped support for Mongoid 6
+- Dropped support for Mongoid < 7
 
 ## 2.3.2 (2023-04-26)
 
