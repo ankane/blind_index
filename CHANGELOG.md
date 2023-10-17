@@ -77,7 +77,7 @@ Breaking changes
 
 - Added `size` option
 - Added sanity checks for Argon2 cost parameters
-- Fixed ActiveRecord callback issues introduced in 0.3.3
+- Fixed Active Record callback issues introduced in 0.3.3
 
 ## 0.3.3 (2018-11-12)
 
@@ -106,13 +106,13 @@ Breaking changes
 
 ## 0.2.0 (2018-05-11)
 
-- Added support for ActiveRecord 4.2
+- Added support for Active Record 4.2
 - Improved validation support when multiple blind indexes
 - Fixed `nil` handling
 
 ## 0.1.1 (2018-04-09)
 
-- Added support for ActiveRecord 5.2
+- Added support for Active Record 5.2
 - Added `callback` option
 - Added support for `key` proc
 - Fixed error inheritance
