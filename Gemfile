@@ -9,7 +9,7 @@ gem "activerecord", "~> 7.1.0"
 gem "scrypt"
 gem "benchmark-ips"
 gem "lockbox", ">= 1"
-gem "sqlite3"
+gem "sqlite3", "< 2"
 
 # to test different adapters
 # gem "mysql2"
