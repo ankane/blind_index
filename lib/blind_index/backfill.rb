@@ -4,7 +4,7 @@ module BlindIndex
 
     def initialize(relation, batch_size:, columns:)
       @relation = relation
-      @transaction = @relation.respond_to?(:transaction)
+      @transaction = @relation.respond_to?(:transaction) && !mongoid_relation?(relation.all)
       @batch_size = batch_size
       @blind_indexes = @relation.blind_indexes
       filter_columns!(columns) if columns
@@ -98,6 +98,10 @@ module BlindIndex
           end
         end
       end
+    end
+
+    def mongoid_relation?(relation)
+      defined?(Mongoid::Criteria) && relation.is_a?(Mongoid::Criteria)
     end
 
     def with_transaction
