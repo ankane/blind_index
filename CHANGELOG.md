@@ -1,6 +1,7 @@
 ## 2.5.0 (unreleased)
 
 - Added support for Mongoid 9
+- Dropped support for Ruby < 3.1
 
 ## 2.4.0 (2023-07-02)
 
