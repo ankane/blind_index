@@ -385,16 +385,6 @@ One alternative to blind indexing is to use a deterministic encryption scheme, l
 1. You can keep encryption consistent for all fields (both searchable and non-searchable)
 2. Blind indexing supports expressions
 
-## Upgrading
-
-### 2.0.0
-
-2.0.0 brings a number of improvements.
-
-- Blind indexes are updated immediately instead of in a `before_validation` callback
-- Better Lockbox integration - no need to generate a separate key
-- There’s a new gem for Argon2 that has no dependencies and (officially) supports Windows
-
 ## History
 
 View the [changelog](https://github.com/ankane/blind_index/blob/master/CHANGELOG.md)
