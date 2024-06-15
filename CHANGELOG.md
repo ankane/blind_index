@@ -1,3 +1,7 @@
+## 2.6.0 (unreleased)
+
+- Removed dependency on `scrypt` gem for scrypt algorithm
+
 ## 2.5.0 (2024-06-03)
 
 - Added support for Mongoid 9
