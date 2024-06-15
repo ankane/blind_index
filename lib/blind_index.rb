@@ -86,6 +86,8 @@ module BlindIndex
           n = cost_options[:n] || 4096
           r = cost_options[:r] || 8
           cp = cost_options[:p] || 1
+          # TODO use
+          # OpenSSL::KDF.scrypt(value, salt: key, N: n, r: r, p: cp, length: size)
           SCrypt::Engine.scrypt(value, key, n, r, cp, size)
         else
           raise BlindIndex::Error, "Unknown algorithm"
