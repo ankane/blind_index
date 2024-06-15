@@ -70,7 +70,7 @@ module BlindIndex
           Argon2::KDF.argon2id(value, salt: key, t: t, m: m, p: 1, length: size)
         when :pbkdf2_sha256
           iterations = cost_options[:iterations] || options[:iterations] || (options[:slow] ? 100000 : 10000)
-          OpenSSL::PKCS5.pbkdf2_hmac(value, key, iterations, size, "sha256")
+          OpenSSL::KDF.pbkdf2_hmac(value, salt: key, iterations: iterations, length: size, hash: "sha256")
         when :argon2i
           t = (cost_options[:t] || 3).to_i
           # use same bounds as rbnacl
