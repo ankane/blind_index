@@ -22,7 +22,7 @@ This uses 100,000 iterations.
 
 ## Argon2i
 
-Add [argon2](https://github.com/technion/ruby-argon2) to your Gemfile and use:
+Use:
 
 ```ruby
 class User < ApplicationRecord
