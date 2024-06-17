@@ -21,7 +21,7 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_delete_by
-    skip unless activerecord6?
+    skip if mongoid?
 
     create_user
     assert_equal 1, User.delete_by(email: "test@example.org")
@@ -29,7 +29,7 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_destroy_by
-    skip unless activerecord6?
+    skip if mongoid?
 
     user = create_user
     assert_equal [user], User.destroy_by(email: "test@example.org")
@@ -343,7 +343,7 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_inspect_filter_attributes
-    skip if mongoid? || ActiveRecord::VERSION::STRING.to_f < 6
+    skip if mongoid?
 
     previous_value = User.filter_attributes
 
@@ -377,9 +377,5 @@ class BlindIndexTest < Minitest::Test
 
   def mongoid?
     defined?(Mongoid)
-  end
-
-  def activerecord6?
-    !mongoid? && ActiveRecord::VERSION::MAJOR >= 6
   end
 end
