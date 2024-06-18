@@ -51,7 +51,7 @@ module BlindIndex
 
       # check size
       size = (options[:size] || 32).to_i
-      raise BlindIndex::Error, "Size must be between 1 and 32" unless (1..32).include?(size)
+      raise BlindIndex::Error, "Size must be between 1 and 32" unless (1..32).cover?(size)
 
       value = value.to_s
 
