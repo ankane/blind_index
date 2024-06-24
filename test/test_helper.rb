@@ -10,7 +10,7 @@ begin
 rescue LoadError
 end
 
-Bundler.require(:default, :development)
+Bundler.require(:default)
 require "minitest/autorun"
 require "minitest/pride"
 
