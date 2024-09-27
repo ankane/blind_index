@@ -1,6 +1,7 @@
 ## 2.6.0 (unreleased)
 
 - Removed dependency on `scrypt` gem for scrypt algorithm
+- Dropped support for Active Record < 7
 
 ## 2.5.0 (2024-06-03)
 

@@ -15,6 +15,6 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 3.1"
 
-  spec.add_dependency "activesupport", ">= 6.1"
+  spec.add_dependency "activesupport", ">= 7"
   spec.add_dependency "argon2-kdf", ">= 0.2"
 end
