@@ -1,3 +1,7 @@
+## 2.6.1 (unreleased)
+
+- Fixed issue with `includes` and Active Record 7
+
 ## 2.6.0 (2024-10-07)
 
 - Removed dependency on `scrypt` gem for scrypt algorithm

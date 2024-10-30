@@ -31,6 +31,11 @@ ActiveRecord::Schema.define do
     t.references :group
   end
 
+  create_table :admins, force: true do |t|
+    t.string :email_ciphertext
+    t.string :email_bidx
+  end
+
   create_table :groups, force: true do |t|
   end
 end
@@ -46,6 +51,13 @@ class User < ActiveRecord::Base
   def read_attribute_for_validation(key)
     super
   end
+end
+
+class Admin < ActiveRecord::Base
+  has_encrypted :email
+  blind_index :email
+
+  belongs_to :user, primary_key: "email", foreign_key: "email", optional: true
 end
 
 class Group < ActiveRecord::Base

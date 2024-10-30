@@ -16,7 +16,7 @@ module BlindIndex
         if table.has_blind_indexes? && (bi = table.send(:klass).blind_indexes[attribute.name.to_sym]) && !value.is_a?(ActiveRecord::StatementCache::Substitute)
           attribute = attribute.relation[bi[:bidx_attribute]]
           value =
-            if value.is_a?(Array)
+            if value.is_a?(Array) || (defined?(Set) && value.is_a?(Set))
               value.map { |v| BlindIndex.generate_bidx(v, **bi) }
             else
               BlindIndex.generate_bidx(value, **bi)
