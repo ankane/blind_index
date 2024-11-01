@@ -1,4 +1,4 @@
-## 2.6.1 (unreleased)
+## 2.6.1 (2024-11-01)
 
 - Fixed issue with `includes` and Active Record 7
 
