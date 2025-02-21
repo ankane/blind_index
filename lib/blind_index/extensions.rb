@@ -17,7 +17,7 @@ module BlindIndex
           model = table.send(:klass)
           attribute_name = attribute.name.to_sym
           cast =
-            if model.normalized_attributes.include?(attribute_name)
+            if model.respond_to?(:normalized_attributes) && model.normalized_attributes.include?(attribute_name)
               ->(v) { model.normalize_value_for(attribute_name, v) }
             else
               ->(v) { v }

@@ -21,8 +21,10 @@ class User
   field :city_ciphertext, type: String
   field :city_bidx_v2, type: String
   field :city_bidx_v3, type: String
+  field :region_ciphertext, type: String
+  field :region_bidx, type: String
 
-  has_encrypted :email, :phone, :city
+  has_encrypted :email, :phone, :city, :region
 
   index({email_bidx: 1}, {unique: true, partial_filter_expression: {email_bidx: {"$type" => "string"}}})
   index({email_ci_bidx: 1}, {unique: true, partial_filter_expression: {email_ci_bidx: {"$type" => "string"}}})
