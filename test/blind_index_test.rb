@@ -374,6 +374,7 @@ class BlindIndexTest < Minitest::Test
     User.create!(region: "Test")
     assert User.find_by(region: "test")
     assert User.find_by(region: "TEST")
+    assert User.where(region: ["test"]).first
     assert User.where(region: ["TEST"]).first
   end
 
