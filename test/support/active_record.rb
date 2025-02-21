@@ -28,6 +28,8 @@ ActiveRecord::Schema.define do
     t.string :city_ciphertext
     t.string :city_bidx_v2
     t.string :city_bidx_v3
+    t.string :region_ciphertext
+    t.string :region_bidx
     t.references :group
   end
 
@@ -43,7 +45,11 @@ end
 class User < ActiveRecord::Base
   attribute :initials, :string
 
-  has_encrypted :email, :first_name, :last_name, :city
+  has_encrypted :email, :first_name, :last_name, :city, :region
+
+  if ActiveRecord::VERSION::STRING.to_f >= 7.1
+    normalizes :region, with: ->(v) { v&.downcase }
+  end
 
   attr_encrypted :phone, key: SecureRandom.random_bytes(32)
 

@@ -192,7 +192,7 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_inheritance
-    assert_equal %i[email email_ci email_binary initials phone city rotated_city], User.blind_indexes.keys
+    assert_equal %i[email email_ci email_binary initials phone city rotated_city region], User.blind_indexes.keys
     assert_equal User.blind_indexes.keys + %i[child], ActiveUser.blind_indexes.keys
   end
 
@@ -366,6 +366,14 @@ class BlindIndexTest < Minitest::Test
     ensure
       User.filter_attributes = previous_value
     end
+  end
+
+  def test_normalizes
+    skip if mongoid? || ActiveRecord::VERSION::STRING.to_f < 7.1
+
+    User.create!(region: "Test")
+    assert User.find_by(region: "test")
+    assert User.find_by(region: "TEST")
   end
 
   private

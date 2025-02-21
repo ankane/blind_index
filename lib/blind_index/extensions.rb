@@ -14,12 +14,20 @@ module BlindIndex
       # https://github.com/rails/rails/commit/56f30962b84fc53b76001301fb830c1594fd377e
       def build(attribute, value, *args)
         if table.has_blind_indexes? && (bi = table.send(:klass).blind_indexes[attribute.name.to_sym]) && !value.is_a?(ActiveRecord::StatementCache::Substitute)
+          model = table.send(:klass)
+          attribute_name = attribute.name.to_sym
+          cast =
+            if model.normalized_attributes.include?(attribute_name)
+              ->(v) { model.normalize_value_for(attribute_name, v) }
+            else
+              ->(v) { v }
+            end
           attribute = attribute.relation[bi[:bidx_attribute]]
           value =
             if value.is_a?(Array) || (defined?(Set) && value.is_a?(Set))
-              value.map { |v| BlindIndex.generate_bidx(v, **bi) }
+              value.map { |v| BlindIndex.generate_bidx(cast.call(v), **bi) }
             else
-              BlindIndex.generate_bidx(value, **bi)
+              BlindIndex.generate_bidx(cast.call(value), **bi)
             end
         end
 

@@ -36,6 +36,7 @@ class User
   blind_index :initials, key: BlindIndex.generate_key, size: 16
   blind_index :phone, algorithm: :pbkdf2_sha256
   blind_index :city, version: 2, rotate: {version: 3, master_key: BlindIndex.generate_key}
+  blind_index :region
 
   validates :email, uniqueness: {allow_blank: true}
   validates :email_ci, uniqueness: {allow_blank: true}

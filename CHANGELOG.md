@@ -1,3 +1,7 @@
+## 2.6.2 (unreleased)
+
+- Fixed querying with normalized attributes
+
 ## 2.6.1 (2024-11-01)
 
 - Fixed issue with `includes` and Active Record 7
