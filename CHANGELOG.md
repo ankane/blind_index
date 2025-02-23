@@ -1,4 +1,4 @@
-## 2.6.2 (unreleased)
+## 2.6.2 (2025-02-23)
 
 - Fixed querying with normalized attributes
 
