@@ -342,15 +342,6 @@ class BlindIndexTest < Minitest::Test
     assert Group.joins(:users).where(users: {email: "test@example.org"}).first
   end
 
-  def test_includes
-    skip if mongoid? || ActiveRecord::VERSION::STRING.to_f >= 7.1
-
-    Admin.delete_all
-    Admin.create!(email: "test@example.org")
-    User.create!(email: "test@example.org")
-    assert Admin.includes(:user).first.user
-  end
-
   def test_inspect_filter_attributes
     skip if mongoid?
 
@@ -369,7 +360,7 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_normalizes
-    skip if mongoid? || ActiveRecord::VERSION::STRING.to_f < 7.1
+    skip if mongoid?
 
     User.create!(region: "Test")
     assert User.find_by(region: "test")

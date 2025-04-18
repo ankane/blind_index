@@ -47,9 +47,7 @@ class User < ActiveRecord::Base
 
   has_encrypted :email, :first_name, :last_name, :city, :region
 
-  if ActiveRecord::VERSION::STRING.to_f >= 7.1
-    normalizes :region, with: ->(v) { v&.downcase }
-  end
+  normalizes :region, with: ->(v) { v&.downcase }
 
   attr_encrypted :phone, key: SecureRandom.random_bytes(32)
 

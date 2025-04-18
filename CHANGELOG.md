@@ -1,3 +1,8 @@
+## 2.7.0 (unreleased)
+
+- Dropped support for Ruby < 3.2 and Active Record < 7.1
+- Dropped support for Mongoid < 8
+
 ## 2.6.2 (2025-02-23)
 
 - Fixed querying with normalized attributes
