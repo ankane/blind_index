@@ -1,5 +1,4 @@
 require "bundler/setup"
-require "logger" # for Active Record < 7.1
 
 begin
   require "active_record"
