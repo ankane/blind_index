@@ -13,3 +13,4 @@ gem "sqlite3"
 # to test different adapters
 # gem "mysql2"
 # gem "pg"
+# gem "trilogy"

@@ -9,6 +9,8 @@ when "postgresql"
   ActiveRecord::Base.establish_connection adapter: "postgresql", database: "blind_index_test"
 when "mysql"
   ActiveRecord::Base.establish_connection adapter: "mysql2", database: "blind_index_test"
+when "trilogy"
+  ActiveRecord::Base.establish_connection adapter: "trilogy", database: "blind_index_test", host: "127.0.0.1"
 else
   raise "Unknown adapter: #{adapter}"
 end
