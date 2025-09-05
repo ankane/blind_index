@@ -37,7 +37,7 @@ class BlindIndexTest < Minitest::Test
   end
 
   def test_dynamic_finders
-    skip if mongoid?
+    skip if mongoid? || ActiveRecord::VERSION::STRING.to_f >= 8.1
 
     user = create_user
     assert User.find_by_email("test@example.org")

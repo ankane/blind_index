@@ -1,0 +1,10 @@
+source "https://rubygems.org"
+
+gemspec path: ".."
+
+gem "rake"
+gem "minitest", ">= 5"
+gem "attr_encrypted"
+gem "activerecord", "~> 8.1.0.beta1"
+gem "lockbox", ">= 1"
+gem "sqlite3"
