@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "rake"
-gem "minitest", ">= 5"
+gem "minitest"
 gem "attr_encrypted"
 gem "activerecord", "~> 8.0.0"
 gem "benchmark-ips"

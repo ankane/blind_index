@@ -12,7 +12,6 @@ end
 
 Bundler.require(:default)
 require "minitest/autorun"
-require "minitest/pride"
 
 BlindIndex.master_key = BlindIndex.generate_key
 
