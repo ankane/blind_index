@@ -1,12 +1,8 @@
 require "bundler/setup"
 
+# TODO move
 begin
   require "active_record"
-rescue LoadError
-end
-
-begin
-  require "mongoid"
 rescue LoadError
 end
 
