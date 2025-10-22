@@ -5,7 +5,7 @@ gemspec
 gem "rake"
 gem "minitest"
 gem "attr_encrypted"
-gem "activerecord", "~> 8.0.0"
+gem "activerecord", "~> 8.1.0"
 gem "benchmark-ips"
 gem "lockbox", ">= 1.4"
 gem "sqlite3", platform: :ruby
