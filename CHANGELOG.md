@@ -1,3 +1,7 @@
+## 2.8.0 (unreleased)
+
+- Dropped support for Ruby < 3.3 and Active Record < 7.2
+
 ## 2.7.0 (2025-05-04)
 
 - Dropped support for Ruby < 3.2 and Active Record < 7.1
