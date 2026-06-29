@@ -1,4 +1,4 @@
-## 2.8.1 (unreleased)
+## 2.8.1 (2026-06-29)
 
 - Fixed `find_or_create_by` method for Mongoid and Ruby 3.4+
 - Fixed mutating conditions with Mongoid
