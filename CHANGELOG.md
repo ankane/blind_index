@@ -1,3 +1,8 @@
+## 2.8.1 (unreleased)
+
+- Fixed `find_or_create_by` method for Mongoid and Ruby 3.4+
+- Fixed mutating conditions with Mongoid
+
 ## 2.8.0 (2026-04-04)
 
 - Dropped support for Ruby < 3.3 and Active Record < 7.2

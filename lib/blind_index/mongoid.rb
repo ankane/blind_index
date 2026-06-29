@@ -5,6 +5,7 @@ module BlindIndex
 
       def expr_query(criterion)
         if criterion.is_a?(Hash) && klass.respond_to?(:blind_indexes)
+          criterion = criterion.dup
           criterion.keys.each do |key|
             key_sym = (key.is_a?(::Mongoid::Criteria::Queryable::Key) ? key.name : key).to_sym
 
