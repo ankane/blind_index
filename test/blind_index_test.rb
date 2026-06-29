@@ -20,6 +20,19 @@ class BlindIndexTest < Minitest::Test
     assert_equal user, User.find_or_create_by(email: "test@example.org")
   end
 
+  def test_find_or_create_by_creates_with_attribute
+    user = User.find_or_create_by(email: "new@example.org")
+    assert_equal "new@example.org", user.email
+    assert User.where(email: "new@example.org").first
+  end
+
+  def test_where_does_not_mutate_criteria
+    create_user
+    criteria = {email: "test@example.org"}
+    User.where(criteria).first
+    assert_equal({email: "test@example.org"}, criteria)
+  end
+
   def test_delete_by
     skip if mongoid?
 

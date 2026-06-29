@@ -5,6 +5,9 @@ module BlindIndex
 
       def expr_query(criterion)
         if criterion.is_a?(Hash) && klass.respond_to?(:blind_indexes)
+          # Mongoid's find_or_create_by reuses the same hash object for the lookup and the subsequent
+          # create; on Ruby 3.4+, the keyword-argument hash is no longer copied between delegations.
+          criterion = criterion.dup
           criterion.keys.each do |key|
             key_sym = (key.is_a?(::Mongoid::Criteria::Queryable::Key) ? key.name : key).to_sym
 
