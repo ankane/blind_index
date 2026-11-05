@@ -42,6 +42,11 @@ ActiveRecord::Schema.define do
 
   create_table :groups, force: true do |t|
   end
+
+  create_table :late_index_users, force: true do |t|
+    t.string :email
+    t.string :email_bidx
+  end
 end
 
 class User < ActiveRecord::Base

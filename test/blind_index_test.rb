@@ -55,6 +55,45 @@ class BlindIndexTest < Minitest::Test
     assert User.where(email: "test@example.org").first
   end
 
+  def test_where_before_blind_index_declaration
+    skip if mongoid?
+
+    [false, true].each do |subclass|
+      parent = Class.new(ActiveRecord::Base) { self.table_name = "late_index_users" }
+      model = subclass ? Class.new(parent) : parent
+      metadata = model.predicate_builder.send(:table)
+      skip "Table metadata is already frozen" if metadata.frozen?
+
+      model.delete_all
+      model.create!(id: 7, email: "target")
+      assert_equal [7], model.where(email: "target").pluck(:id)
+
+      parent.blind_index :email, algorithm: :pbkdf2_sha256, key: "11" * 32
+      other = model.create!(id: 19, email: "target")
+      other.update_columns(email: "other")
+
+      assert_equal [7], model.where(email: "target").pluck(:id)
+      metadata.freeze
+      assert_equal [7], model.where(email: "target").pluck(:id)
+    end
+  end
+
+  def test_where_with_frozen_table_metadata
+    skip if mongoid?
+
+    model = Class.new(ActiveRecord::Base) { self.table_name = "late_index_users" }
+    model.blind_index :email, algorithm: :pbkdf2_sha256, key: "22" * 32
+    model.delete_all
+    model.insert_all!([
+      {id: 31, email: "other", email_bidx: model.generate_email_bidx("frozen")},
+      {id: 47, email: "frozen", email_bidx: model.generate_email_bidx("different")}
+    ])
+    model.predicate_builder.send(:table).freeze
+
+    assert_equal [31], model.where(email: "frozen").pluck(:id)
+    assert_empty model.where(email: "missing").pluck(:id)
+  end
+
   def test_where_table
     skip if mongoid?
 

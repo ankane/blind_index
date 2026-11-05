@@ -1,12 +1,12 @@
 module BlindIndex
   module Extensions
     module TableMetadata
-      # memoize for performance
       def has_blind_indexes?
-        unless defined?(@has_blind_indexes)
-          @has_blind_indexes = klass.respond_to?(:blind_indexes)
-        end
-        @has_blind_indexes
+        return @has_blind_indexes if defined?(@has_blind_indexes)
+
+        has_blind_indexes = klass.respond_to?(:blind_indexes)
+        @has_blind_indexes = has_blind_indexes unless frozen?
+        has_blind_indexes
       end
     end
 
