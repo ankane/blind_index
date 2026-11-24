@@ -139,6 +139,7 @@ end
 ActiveSupport.on_load(:active_record) do
   require_relative "blind_index/extensions"
   extend BlindIndex::Model
+  singleton_class.prepend(BlindIndex::Extensions::Finders)
 
   ActiveRecord::TableMetadata.prepend(BlindIndex::Extensions::TableMetadata)
   ActiveRecord::DynamicMatchers::Method.prepend(BlindIndex::Extensions::DynamicMatchers)

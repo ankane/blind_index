@@ -1,5 +1,6 @@
 ActiveRecord::Base.logger = $logger
 ActiveRecord::Migration.verbose = ENV["VERBOSE"]
+ActiveRecord::Encryption.configure(primary_key: SecureRandom.hex(32), key_derivation_salt: SecureRandom.hex(32))
 
 adapter = ENV["ADAPTER"] || "sqlite"
 case adapter
@@ -40,6 +41,11 @@ ActiveRecord::Schema.define do
     t.string :email_bidx
   end
 
+  create_table :encrypted_users, force: true do |t|
+    t.text :email
+    t.string :email_bidx
+  end
+
   create_table :groups, force: true do |t|
   end
 end
@@ -64,6 +70,12 @@ class Admin < ActiveRecord::Base
   blind_index :email
 
   belongs_to :user, primary_key: "email", foreign_key: "email", optional: true
+end
+
+class EncryptedUser < ActiveRecord::Base
+  encrypts :email
+  blind_index :email
+  alias_attribute :email_address, :email
 end
 
 class Group < ActiveRecord::Base
