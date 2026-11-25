@@ -1,5 +1,23 @@
 module BlindIndex
   module Extensions
+    module Finders
+      def find_by(*args)
+        conditions = args.first
+        return super unless conditions.is_a?(Hash) && respond_to?(:blind_indexes)
+
+        indexes = blind_indexes
+        indexed_condition = conditions.each_key.any? do |key|
+          name = key.to_s
+          indexes.key?((attribute_aliases[name] || name).to_sym)
+        end
+
+        # Cached statements only pass placeholders to the predicate builder.
+        return all.find_by(*args) if indexed_condition
+
+        super
+      end
+    end
+
     module TableMetadata
       # memoize for performance
       def has_blind_indexes?
